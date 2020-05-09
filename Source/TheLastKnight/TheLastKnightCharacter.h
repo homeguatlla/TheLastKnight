@@ -4,13 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include <TheLastKnight\Character\CharacterAttributes.h>
-#include <TheLastKnight\Character\DA_CharacterAttributes.h>
+
+#include <TheLastKnight/utils/fsm/StatesMachine.h>
+
+#include <TheLastKnight/Character/CharacterAttributes.h>
+#include <TheLastKnight/Character/DA_CharacterAttributes.h>
+#include <TheLastKnight/Character/fsm/CharacterContext.h>
+#include <TheLastKnight/Character/fsm/states/CharacterStates.h>
+#include <TheLastKnight/Character/ICharacter.h>
+#include <TheLastKnight/Character/InputHandler.h>
+
 #include "TheLastKnightCharacter.generated.h"
 
+using TLN::ICharacter;
 
 UCLASS(config=Game)
-class ATheLastKnightCharacter : public ACharacter
+class ATheLastKnightCharacter : public ACharacter, public ICharacter
 {
 	GENERATED_BODY()
 
@@ -23,11 +32,15 @@ class ATheLastKnightCharacter : public ACharacter
 	class UCameraComponent* FollowCamera;
 
 	//Custom attributes
-	CharacterAttributes mAttributes;
+	TLN::CharacterAttributes mAttributes;
 
 	//Ability1 key
 	bool mIsAbility1Pressed;
 	float mAbility1KeyHoldTime;
+
+	std::unique_ptr<core::utils::FSM::StatesMachine<TLN::CharacterState, TLN::CharacterContext>> mStatesMachine;
+	std::shared_ptr<TLN::CharacterContext> mCharacterFSMContext;
+	TLN::InputHandler mInputHandler;
 
 public:
 	ATheLastKnightCharacter();
@@ -88,7 +101,11 @@ protected:
 	// End of APawn interface
 
 private:
+	void CreateStatesMachine();
 	void FillUpCharacterAttributes();
+
+	//inherit from TLN::ICharacter
+	void PerformMovement() override;
 
 public:
 	/** Returns CameraBoom subobject **/
