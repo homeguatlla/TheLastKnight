@@ -15,6 +15,8 @@
 #include <TheLastKnight/Character/fsm/transitions/EnterIdle.h>
 #include <TheLastKnight/Character/fsm/transitions/EnterWalk.h>
 
+#include <TheLastKnight/Character/InputHandler.h>
+
 #include <memory>
 
 #include <cassert>
@@ -63,14 +65,31 @@ void ATheLastKnightCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	mInputHandler = std::make_shared<InputHandler>();
+
 	FillUpCharacterAttributes();
 	CreateStatesMachine();
 }
 
+bool ATheLastKnightCharacter::IsWalking() const
+{
+	auto characterMovement = GetCharacterMovement();
+	return characterMovement->IsWalking() && !characterMovement->Velocity.IsZero();
+}
+
+bool ATheLastKnightCharacter::IsIdle() const
+{
+	auto characterMovement = GetCharacterMovement();
+	return characterMovement->IsWalking() && characterMovement->Velocity.IsZero();
+}
 
 void ATheLastKnightCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	mStatesMachine->Update(DeltaSeconds);
+
+	UE_LOG(LogTemp, Log, TEXT("Character FSM state: %d"), mStatesMachine->GetCurrentState()->GetID());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -105,7 +124,7 @@ void ATheLastKnightCharacter::SetupPlayerInputComponent(class UInputComponent* P
 
 void ATheLastKnightCharacter::CreateStatesMachine()
 {
-	mCharacterFSMContext = std::make_shared<CharacterContext>(this);
+	mCharacterFSMContext = std::make_shared<CharacterContext>(this, mInputHandler);
 	mStatesMachine = std::make_unique<core::utils::FSM::StatesMachine<CharacterState, CharacterContext>>(mCharacterFSMContext);
 
 	auto idle = std::make_shared<Idle>();
@@ -140,6 +159,7 @@ void ATheLastKnightCharacter::FillUpCharacterAttributes()
 
 void ATheLastKnightCharacter::PerformMovement()
 {
+	
 }
 
 
@@ -181,8 +201,7 @@ void ATheLastKnightCharacter::MoveForward(float Value)
 		// get forward vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-		mInputHandler.ForwardBackward(Direction, Value);
-		//AddMovementInput(Direction, Value);
+		AddMovementInput(Direction, Value);
 	}
 }
 
@@ -197,20 +216,19 @@ void ATheLastKnightCharacter::MoveRight(float Value)
 		// get right vector 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
-		//AddMovementInput(Direction, Value);
-		mInputHandler.LeftRight(Direction, Value);
+		AddMovementInput(Direction, Value);
 	}
 }
 
 void ATheLastKnightCharacter::Ability1()
 {
-	mInputHandler.Ability1(true);
+	mInputHandler->Ability1(true);
 	//mIsAbility1Pressed = true;
 	//mAbility1KeyHoldTime = 0.0f;
 }
 
 void ATheLastKnightCharacter::StopAbility1()
 {
-	mInputHandler.Ability1(false);
+	mInputHandler->Ability1(false);
 	//mIsAbility1Pressed = false;
 }

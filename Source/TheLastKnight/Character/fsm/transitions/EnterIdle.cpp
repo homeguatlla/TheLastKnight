@@ -15,8 +15,6 @@ namespace TLN
 
 	bool EnterIdle::CanPerformTransition() const
 	{
-		return true;
-		//return NPhysics::NMath::IsNearlyEqual(mPhysicsComponent->GetVelocity(), glm::vec3(0.0f)) &&
-		//	mCollisionComponent->IsOnGround();
+		return mCharacter->IsIdle();
 	}
 };

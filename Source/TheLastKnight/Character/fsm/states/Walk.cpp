@@ -15,7 +15,7 @@ namespace TLN
 
 	void Walk::OnUpdate(float deltaTime)
 	{
-		//mPlayer->PerformMovement(deltaTime);
+		mCharacter->PerformMovement();
 	}
 };
 

@@ -40,13 +40,15 @@ class ATheLastKnightCharacter : public ACharacter, public ICharacter
 
 	std::unique_ptr<core::utils::FSM::StatesMachine<TLN::CharacterState, TLN::CharacterContext>> mStatesMachine;
 	std::shared_ptr<TLN::CharacterContext> mCharacterFSMContext;
-	TLN::InputHandler mInputHandler;
+	std::shared_ptr<TLN::InputHandler> mInputHandler;
 
 public:
 	ATheLastKnightCharacter();
 
 	void BeginPlay() override;
 
+	bool IsWalking() const override;
+	bool IsIdle() const override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)

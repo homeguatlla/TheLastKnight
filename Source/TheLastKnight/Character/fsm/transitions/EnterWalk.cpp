@@ -15,6 +15,6 @@ namespace TLN
 
 	bool EnterWalk::CanPerformTransition() const
 	{
-		return false;
+		return mCharacter->IsWalking();
 	}
 }
