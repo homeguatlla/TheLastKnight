@@ -11,11 +11,18 @@
 
 #include <TheLastKnight/Character/fsm/states/Idle.h>
 #include <TheLastKnight/Character/fsm/states/Walk.h>
+#include <TheLastKnight/Character/fsm/states/Casting.h>
 
 #include <TheLastKnight/Character/fsm/transitions/EnterIdle.h>
 #include <TheLastKnight/Character/fsm/transitions/EnterWalk.h>
+#include <TheLastKnight/Character/fsm/transitions/EnterCast.h>
 
 #include <TheLastKnight/Character/InputHandler.h>
+#include <TheLastKnight/Character/AbilitiesToolChest.h>
+
+#include <TheLastKnight/Abilities/IAbility.h>
+#include <TheLastKnight/Abilities/BPHealthAbility.h>
+#include <TheLastKnight/Abilities/HealthAbility.h>
 
 #include <memory>
 
@@ -69,6 +76,7 @@ void ATheLastKnightCharacter::BeginPlay()
 
 	FillUpCharacterAttributes();
 	CreateStatesMachine();
+	AddDefaultAbilitiesToTheAbilitiesToolChest();
 }
 
 bool ATheLastKnightCharacter::IsWalking() const
@@ -81,6 +89,34 @@ bool ATheLastKnightCharacter::IsIdle() const
 {
 	auto characterMovement = GetCharacterMovement();
 	return characterMovement->IsWalking() && characterMovement->Velocity.IsZero();
+}
+
+bool ATheLastKnightCharacter::IsCasting() const
+{
+	return mIsCasting;
+}
+
+bool ATheLastKnightCharacter::CanCast(InputAction action) const
+{
+	return mAbilitiesToolChest.CanCast(action, mAttributes.GetMana());
+}
+
+void ATheLastKnightCharacter::Cast()
+{
+	TLN::Action action;
+	if (mInputHandler->IsActionPressed(InputAction::ABILITY1))
+	{
+		action = mInputHandler->GetAction(InputAction::ABILITY1);
+	} 
+	else if (mInputHandler->IsActionPressed(InputAction::ABILITY2))
+	{
+		action = mInputHandler->GetAction(InputAction::ABILITY2);
+	}
+
+	mIsCasting = true;
+	auto ability = mAbilitiesToolChest.GetAbility(InputAction::ABILITY1);
+	mAttributes.SetMana(mAttributes.GetMana() - ability->GetCastCost());
+	ability->Cast(GetActorLocation());
 }
 
 void ATheLastKnightCharacter::Tick(float DeltaSeconds)
@@ -129,18 +165,25 @@ void ATheLastKnightCharacter::CreateStatesMachine()
 
 	auto idle = std::make_shared<Idle>();
 	auto walk = std::make_shared<Walk>();
+	auto cast = std::make_shared<Casting>();
 
 	mStatesMachine->AddState(idle);
 	mStatesMachine->AddState(walk);
+	mStatesMachine->AddState(cast);
 	
 	//from Idle
 	mStatesMachine->AddTransition(std::make_unique<EnterWalk>(idle, walk));
+	mStatesMachine->AddTransition(std::make_unique<EnterCast>(idle, cast));
 
 	//from Walk
 	mStatesMachine->AddTransition(std::make_unique<EnterIdle>(walk, idle));
+	mStatesMachine->AddTransition(std::make_unique<EnterCast>(idle, cast));
+
+	//from Cast
+	mStatesMachine->AddTransition(std::make_unique<EnterIdle>(cast, idle));
+	mStatesMachine->AddTransition(std::make_unique<EnterWalk>(cast, walk));
 
 	mStatesMachine->SetInitialState(idle->GetID());
-
 }
 
 void ATheLastKnightCharacter::FillUpCharacterAttributes()
@@ -155,6 +198,15 @@ void ATheLastKnightCharacter::FillUpCharacterAttributes()
 		assert(maxMana > 0);
 		mAttributes.SetMaxMana(maxMana);
 	}
+}
+
+void ATheLastKnightCharacter::AddDefaultAbilitiesToTheAbilitiesToolChest()
+{
+	auto bpHealthAbility = GetWorld()->SpawnActor<ABPHealthAbility>(ABPHealthAbility::StaticClass());
+	auto healthAbility = std::make_shared<HealthAbility>(bpHealthAbility);
+
+	auto index = mAbilitiesToolChest.AddAbility(healthAbility);
+	mAbilitiesToolChest.BindAbilityToToolBelt(TLN::InputAction::ABILITY1, index);
 }
 
 void ATheLastKnightCharacter::PerformMovement()

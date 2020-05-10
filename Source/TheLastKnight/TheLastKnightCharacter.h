@@ -13,6 +13,7 @@
 #include <TheLastKnight/Character/fsm/states/CharacterStates.h>
 #include <TheLastKnight/Character/ICharacter.h>
 #include <TheLastKnight/Character/InputHandler.h>
+#include <TheLastKnight/Character/AbilitiesToolChest.h>
 
 #include "TheLastKnightCharacter.generated.h"
 
@@ -33,6 +34,8 @@ class ATheLastKnightCharacter : public ACharacter, public ICharacter
 
 	//Custom attributes
 	TLN::CharacterAttributes mAttributes;
+	//Abilities Tool Chest
+	TLN::AbilitiesToolChest mAbilitiesToolChest;
 
 	//Ability1 key
 	bool mIsAbility1Pressed;
@@ -42,6 +45,8 @@ class ATheLastKnightCharacter : public ACharacter, public ICharacter
 	std::shared_ptr<TLN::CharacterContext> mCharacterFSMContext;
 	std::shared_ptr<TLN::InputHandler> mInputHandler;
 
+	bool mIsCasting = { false };
+
 public:
 	ATheLastKnightCharacter();
 
@@ -49,6 +54,10 @@ public:
 
 	bool IsWalking() const override;
 	bool IsIdle() const override;
+	bool IsCasting() const override;
+
+	bool CanCast(TLN::InputAction action) const override;
+	void Cast() override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -105,6 +114,7 @@ protected:
 private:
 	void CreateStatesMachine();
 	void FillUpCharacterAttributes();
+	void AddDefaultAbilitiesToTheAbilitiesToolChest();
 
 	//inherit from TLN::ICharacter
 	void PerformMovement() override;
