@@ -15,9 +15,12 @@
 #include <TheLastKnight/Character/InputHandler.h>
 #include <TheLastKnight/Character/AbilitiesToolChest.h>
 
+
 #include "TheLastKnightCharacter.generated.h"
 
 using TLN::ICharacter;
+
+class ABPHealthAbility;
 
 UCLASS(config=Game)
 class ATheLastKnightCharacter : public ACharacter, public ICharacter
@@ -67,9 +70,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data Tables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attributes")
 	UDA_CharacterAttributes* CharacterAttributes;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	TSubclassOf<ABPHealthAbility> mHealthAbilityClass;
 
 protected:
 

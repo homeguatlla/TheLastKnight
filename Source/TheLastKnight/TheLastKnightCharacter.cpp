@@ -202,8 +202,20 @@ void ATheLastKnightCharacter::FillUpCharacterAttributes()
 
 void ATheLastKnightCharacter::AddDefaultAbilitiesToTheAbilitiesToolChest()
 {
-	auto bpHealthAbility = GetWorld()->SpawnActor<ABPHealthAbility>(ABPHealthAbility::StaticClass());
-	auto healthAbility = std::make_shared<HealthAbility>(bpHealthAbility);
+	FActorSpawnParameters spawnInfo;
+	spawnInfo.Owner = this;
+	spawnInfo.Instigator = this;
+	spawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	auto healthAbilityBP = GetWorld()->SpawnActor<ABPHealthAbility>(
+		mHealthAbilityClass,
+		FVector::ZeroVector,
+		FRotator::ZeroRotator,
+		spawnInfo);
+	
+	healthAbilityBP->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
+
+	auto healthAbility = std::make_shared<HealthAbility>(healthAbilityBP);
 
 	auto index = mAbilitiesToolChest.AddAbility(healthAbility);
 	mAbilitiesToolChest.BindAbilityToToolBelt(TLN::InputAction::ABILITY1, index);
