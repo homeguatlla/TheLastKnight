@@ -12,17 +12,21 @@
 #include <TheLastKnight/Character/fsm/states/Idle.h>
 #include <TheLastKnight/Character/fsm/states/Walk.h>
 #include <TheLastKnight/Character/fsm/states/Casting.h>
+#include <TheLastKnight/Character/fsm/states/IdleAbility.h>
 
 #include <TheLastKnight/Character/fsm/transitions/EnterIdle.h>
 #include <TheLastKnight/Character/fsm/transitions/EnterWalk.h>
 #include <TheLastKnight/Character/fsm/transitions/EnterCast.h>
+#include <TheLastKnight/Character/fsm/transitions/EnterIdleAbility.h>
 
 #include <TheLastKnight/Character/InputHandler.h>
 #include <TheLastKnight/Character/AbilitiesToolChest.h>
 
 #include <TheLastKnight/Abilities/IAbility.h>
-#include <TheLastKnight/Abilities/BPHealthAbility.h>
+#include <TheLastKnight/Abilities/Ability.h>
 #include <TheLastKnight/Abilities/HealthAbility.h>
+
+#include <TheLastKnight/Abilities/DataAssets/DA_CharacterAbility.h>
 
 #include <memory>
 
@@ -75,6 +79,7 @@ void ATheLastKnightCharacter::BeginPlay()
 	mInputHandler = std::make_shared<InputHandler>();
 
 	FillUpCharacterAttributes();
+	FillUpAbilitiesFactory();
 	CreateStatesMachine();
 	AddDefaultAbilitiesToTheAbilitiesToolChest();
 }
@@ -93,7 +98,12 @@ bool ATheLastKnightCharacter::IsIdle() const
 
 bool ATheLastKnightCharacter::IsCasting() const
 {
-	return mIsCasting;
+	return mStatesMachines[1]->GetCurrentState()->GetID() == CharacterState::STATE_CASTING;
+}
+
+bool ATheLastKnightCharacter::CanCast() const
+{
+	return mAbilitiesToolChest.CanCast();
 }
 
 bool ATheLastKnightCharacter::CanCast(InputAction action) const
@@ -101,31 +111,38 @@ bool ATheLastKnightCharacter::CanCast(InputAction action) const
 	return mAbilitiesToolChest.CanCast(action, mAttributes.GetMana());
 }
 
-void ATheLastKnightCharacter::Cast()
+std::shared_ptr<TLN::IAbility> ATheLastKnightCharacter::Cast()
 {
-	TLN::Action action;
+	TLN::InputAction action;
 	if (mInputHandler->IsActionPressed(InputAction::ABILITY1))
 	{
-		action = mInputHandler->GetAction(InputAction::ABILITY1);
+		action = InputAction::ABILITY1;
 	} 
 	else if (mInputHandler->IsActionPressed(InputAction::ABILITY2))
 	{
-		action = mInputHandler->GetAction(InputAction::ABILITY2);
+		action = InputAction::ABILITY2;
 	}
 
-	mIsCasting = true;
-	auto ability = mAbilitiesToolChest.GetAbility(InputAction::ABILITY1);
-	mAttributes.SetMana(mAttributes.GetMana() - ability->GetCastCost());
-	ability->Cast(GetActorLocation());
+	auto ability = mAbilitiesToolChest.GetAbility(action);
+	if (ability)
+	{
+		mAttributes.SetMana(mAttributes.GetMana() - ability->GetCastCost());
+		ability->Cast(GetActorLocation());
+	}
+
+	return ability;
 }
 
 void ATheLastKnightCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	mStatesMachine->Update(DeltaSeconds);
-
-	UE_LOG(LogTemp, Log, TEXT("Character FSM state: %d"), mStatesMachine->GetCurrentState()->GetID());
+	UE_LOG(LogTemp, Log, TEXT("Character FSM:"));
+	for (auto&& machine : mStatesMachines)
+	{
+		machine->Update(DeltaSeconds);
+		UE_LOG(LogTemp, Log, TEXT("Character FSM state: %d"), machine->GetCurrentState()->GetID());
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -144,6 +161,9 @@ void ATheLastKnightCharacter::SetupPlayerInputComponent(class UInputComponent* P
 	PlayerInputComponent->BindAction("Ability1", IE_Pressed, this, &ATheLastKnightCharacter::Ability1);
 	PlayerInputComponent->BindAction("Ability1", IE_Released, this, &ATheLastKnightCharacter::StopAbility1);
 
+	PlayerInputComponent->BindAction("Ability2", IE_Pressed, this, &ATheLastKnightCharacter::Ability2);
+	PlayerInputComponent->BindAction("Ability2", IE_Released, this, &ATheLastKnightCharacter::StopAbility2);
+
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -158,32 +178,53 @@ void ATheLastKnightCharacter::SetupPlayerInputComponent(class UInputComponent* P
 	PlayerInputComponent->BindTouch(IE_Released, this, &ATheLastKnightCharacter::TouchStopped);
 }
 
-void ATheLastKnightCharacter::CreateStatesMachine()
+void ATheLastKnightCharacter::CreateMovementStatesMachine()
 {
-	mCharacterFSMContext = std::make_shared<CharacterContext>(this, mInputHandler);
-	mStatesMachine = std::make_unique<core::utils::FSM::StatesMachine<CharacterState, CharacterContext>>(mCharacterFSMContext);
+	auto statesMachine = std::make_unique<StatesMachine>(mCharacterFSMContext);
 
 	auto idle = std::make_shared<Idle>();
 	auto walk = std::make_shared<Walk>();
-	auto cast = std::make_shared<Casting>();
 
-	mStatesMachine->AddState(idle);
-	mStatesMachine->AddState(walk);
-	mStatesMachine->AddState(cast);
-	
+	statesMachine->AddState(idle);
+	statesMachine->AddState(walk);
+
 	//from Idle
-	mStatesMachine->AddTransition(std::make_unique<EnterWalk>(idle, walk));
-	mStatesMachine->AddTransition(std::make_unique<EnterCast>(idle, cast));
+	statesMachine->AddTransition(std::make_unique<EnterWalk>(idle, walk));
 
 	//from Walk
-	mStatesMachine->AddTransition(std::make_unique<EnterIdle>(walk, idle));
-	mStatesMachine->AddTransition(std::make_unique<EnterCast>(idle, cast));
+	statesMachine->AddTransition(std::make_unique<EnterIdle>(walk, idle));
+
+	statesMachine->SetInitialState(idle->GetID());
+
+	mStatesMachines.push_back(std::move(statesMachine));
+}
+
+void ATheLastKnightCharacter::CreateAbilityStatesMachine()
+{
+	auto statesMachine = std::make_unique<StatesMachine>(mCharacterFSMContext);
+
+	auto idle = std::make_shared<IdleAbility>();
+	auto cast = std::make_shared<Casting>();
+
+	statesMachine->AddState(idle);
+	statesMachine->AddState(cast);
+
+	//from Idle
+	statesMachine->AddTransition(std::make_unique<EnterCast>(idle, cast));
 
 	//from Cast
-	mStatesMachine->AddTransition(std::make_unique<EnterIdle>(cast, idle));
-	mStatesMachine->AddTransition(std::make_unique<EnterWalk>(cast, walk));
+	statesMachine->AddTransition(std::make_unique<EnterIdleAbility>(cast, idle));
 
-	mStatesMachine->SetInitialState(idle->GetID());
+	statesMachine->SetInitialState(idle->GetID());
+
+	mStatesMachines.push_back(std::move(statesMachine));
+}
+
+void ATheLastKnightCharacter::CreateStatesMachine()
+{
+	mCharacterFSMContext = std::make_shared<CharacterContext>(this, mInputHandler);
+	CreateMovementStatesMachine();
+	CreateAbilityStatesMachine();
 }
 
 void ATheLastKnightCharacter::FillUpCharacterAttributes()
@@ -200,25 +241,24 @@ void ATheLastKnightCharacter::FillUpCharacterAttributes()
 	}
 }
 
+void ATheLastKnightCharacter::FillUpAbilitiesFactory()
+{
+	mAbilitiesFactory = std::make_shared<AbilitiesFactory>(mCharacterAbilities);
+	mAbilitiesFactory->Register(
+		HealthAbility::GetName(), 
+		[](AAbility* ability, UDA_CharacterAbility* abilityDA) 
+		{
+			return HealthAbility::Create(ability, abilityDA);
+		}
+	);
+}
+
 void ATheLastKnightCharacter::AddDefaultAbilitiesToTheAbilitiesToolChest()
 {
-	FActorSpawnParameters spawnInfo;
-	spawnInfo.Owner = this;
-	spawnInfo.Instigator = this;
-	spawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-	auto healthAbilityBP = GetWorld()->SpawnActor<ABPHealthAbility>(
-		mHealthAbilityClass,
-		FVector::ZeroVector,
-		FRotator::ZeroRotator,
-		spawnInfo);
-	
-	healthAbilityBP->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
-
-	auto healthAbility = std::make_shared<HealthAbility>(healthAbilityBP);
-
-	auto index = mAbilitiesToolChest.AddAbility(healthAbility);
+	auto ability = mAbilitiesFactory->Create(HealthAbility::GetName(), GetWorld(), this);
+	auto index = mAbilitiesToolChest.AddAbility(ability);
 	mAbilitiesToolChest.BindAbilityToToolBelt(TLN::InputAction::ABILITY1, index);
+	mAbilitiesToolChest.BindAbilityToToolBelt(TLN::InputAction::ABILITY2, index);
 }
 
 void ATheLastKnightCharacter::PerformMovement()
@@ -295,4 +335,14 @@ void ATheLastKnightCharacter::StopAbility1()
 {
 	mInputHandler->Ability1(false);
 	//mIsAbility1Pressed = false;
+}
+
+void ATheLastKnightCharacter::Ability2()
+{
+	mInputHandler->Ability2(true);
+}
+
+void ATheLastKnightCharacter::StopAbility2()
+{
+	mInputHandler->Ability2(false);
 }

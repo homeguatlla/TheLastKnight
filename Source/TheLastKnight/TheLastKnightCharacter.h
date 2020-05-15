@@ -14,13 +14,15 @@
 #include <TheLastKnight/Character/ICharacter.h>
 #include <TheLastKnight/Character/InputHandler.h>
 #include <TheLastKnight/Character/AbilitiesToolChest.h>
-
-
+#include <TheLastKnight/Abilities/AbilitiesFactory.h>
+#include <vector>
 #include "TheLastKnightCharacter.generated.h"
 
-using TLN::ICharacter;
 
-class ABPHealthAbility;
+using TLN::ICharacter;
+class UDA_CharacterAbilities;
+
+
 
 UCLASS(config=Game)
 class ATheLastKnightCharacter : public ACharacter, public ICharacter
@@ -40,27 +42,30 @@ class ATheLastKnightCharacter : public ACharacter, public ICharacter
 	//Abilities Tool Chest
 	TLN::AbilitiesToolChest mAbilitiesToolChest;
 
-	//Ability1 key
-	bool mIsAbility1Pressed;
-	float mAbility1KeyHoldTime;
-
-	std::unique_ptr<core::utils::FSM::StatesMachine<TLN::CharacterState, TLN::CharacterContext>> mStatesMachine;
+	//States machine to control character states
+	using StatesMachine = core::utils::FSM::StatesMachine<TLN::CharacterState, TLN::CharacterContext>;
+	std::vector<std::unique_ptr<StatesMachine>> mStatesMachines;
 	std::shared_ptr<TLN::CharacterContext> mCharacterFSMContext;
+
+	//Holds last input
 	std::shared_ptr<TLN::InputHandler> mInputHandler;
 
-	bool mIsCasting = { false };
+	std::shared_ptr<TLN::AbilitiesFactory> mAbilitiesFactory;
 
 public:
 	ATheLastKnightCharacter();
 
 	void BeginPlay() override;
 
+	//inherited from ICharacter
 	bool IsWalking() const override;
 	bool IsIdle() const override;
 	bool IsCasting() const override;
+	bool CanCast() const override;
 
 	bool CanCast(TLN::InputAction action) const override;
-	void Cast() override;
+	std::shared_ptr<TLN::IAbility> Cast() override;
+
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -73,8 +78,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attributes")
 	UDA_CharacterAttributes* CharacterAttributes;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
-	TSubclassOf<ABPHealthAbility> mHealthAbilityClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Abilities")
+	UDA_CharacterAbilities* mCharacterAbilities;
 
 protected:
 
@@ -111,6 +116,10 @@ protected:
 
 	void StopAbility1();
 
+	void Ability2();
+
+	void StopAbility2();
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -118,7 +127,10 @@ protected:
 
 private:
 	void CreateStatesMachine();
+	void CreateMovementStatesMachine();
+	void CreateAbilityStatesMachine();
 	void FillUpCharacterAttributes();
+	void FillUpAbilitiesFactory();
 	void AddDefaultAbilitiesToTheAbilitiesToolChest();
 
 	//inherit from TLN::ICharacter

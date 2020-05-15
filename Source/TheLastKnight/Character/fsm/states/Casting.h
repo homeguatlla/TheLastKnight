@@ -6,6 +6,7 @@ namespace TLN
 {
 	class ICharacter;
 	class CharacterContext;
+	class IAbility;
 
 	class Casting : public core::utils::FSM::BaseState<CharacterState, CharacterContext>
 	{
@@ -16,8 +17,10 @@ namespace TLN
 
 		void OnInit() override;
 		void OnEnter(float deltaTime) override;
+		void OnUpdate(float deltaTime) override;
 
 	private:
 		ICharacter* mCharacter;
+		std::shared_ptr<TLN::IAbility> mAbility;
 	};
 };

@@ -15,6 +15,6 @@ namespace TLN
 
 	bool EnterIdle::CanPerformTransition() const
 	{
-		return mCharacter->IsIdle() && !mCharacter->IsCasting();
+		return mCharacter->IsIdle();
 	}
 };

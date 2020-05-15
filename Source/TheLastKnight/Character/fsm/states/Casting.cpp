@@ -1,6 +1,7 @@
 #include <TheLastKnight/Character/fsm/states/Casting.h>
 #include <TheLastKnight/Character/fsm/CharacterContext.h>
 #include <TheLastKnight/Character/ICharacter.h>
+#include <TheLastKnight/Abilities/IAbility.h>
 
 namespace TLN
 {
@@ -11,6 +12,11 @@ namespace TLN
 
 	void Casting::OnEnter(float deltaTime)
 	{
-		mCharacter->Cast();
+		mAbility = mCharacter->Cast();
+	}
+
+	void Casting::OnUpdate(float deltaTime)
+	{
+		mAbility->Update(deltaTime);
 	}
 };

@@ -16,6 +16,18 @@ namespace TLN
 		mAbilitiesInToolBelt[action] = index;
 	}
 
+	bool AbilitiesToolChest::CanCast() const
+	{
+		for (auto&& ability : mAbilitiesInToolBelt)
+		{
+			if (!mAbilities[ability.second]->IsReadyToCast())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 	bool AbilitiesToolChest::CanCast(InputAction action, int availableMana) const
 	{
 		auto ability = GetAbility(action);
