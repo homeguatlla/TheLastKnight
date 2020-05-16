@@ -14,8 +14,11 @@ namespace TLN
 			virtual bool IsCasting() const = 0;
 
 			virtual bool CanCast(InputAction action) const = 0;
-			virtual bool CanCast() const = 0;
+			virtual bool IsReadyToCast() const = 0;
 			virtual std::shared_ptr<TLN::IAbility> Cast() = 0;
+
+			virtual void PlayCastingAnimation() = 0;
+			virtual void StopCastingAnimation() = 0;
 
 			void Empty() {}
 	};

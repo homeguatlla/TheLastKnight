@@ -18,4 +18,9 @@ namespace TLN
 	{
 		return mInputHandler;
 	}
+
+	void CharacterContext::SetAbility(std::shared_ptr<IAbility> ability)
+	{
+		mAbility = ability;
+	}
 }

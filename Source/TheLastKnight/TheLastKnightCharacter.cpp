@@ -3,8 +3,13 @@
 #include "TheLastKnightCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
+
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+
+#include "Animation/AnimInstance.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -13,11 +18,13 @@
 #include <TheLastKnight/Character/fsm/states/Walk.h>
 #include <TheLastKnight/Character/fsm/states/Casting.h>
 #include <TheLastKnight/Character/fsm/states/IdleAbility.h>
+#include <TheLastKnight/Character/fsm/states/Cooldown.h>
 
 #include <TheLastKnight/Character/fsm/transitions/EnterIdle.h>
 #include <TheLastKnight/Character/fsm/transitions/EnterWalk.h>
 #include <TheLastKnight/Character/fsm/transitions/EnterCast.h>
 #include <TheLastKnight/Character/fsm/transitions/EnterIdleAbility.h>
+#include <TheLastKnight/Character/fsm/transitions/EnterCooldown.h>
 
 #include <TheLastKnight/Character/InputHandler.h>
 #include <TheLastKnight/Character/AbilitiesToolChest.h>
@@ -26,6 +33,7 @@
 #include <TheLastKnight/Abilities/Ability.h>
 #include <TheLastKnight/Abilities/HealthAbility.h>
 
+#include <TheLastKnight/Abilities/DataAssets/DA_CharacterAbilities.h>
 #include <TheLastKnight/Abilities/DataAssets/DA_CharacterAbility.h>
 
 #include <memory>
@@ -84,6 +92,18 @@ void ATheLastKnightCharacter::BeginPlay()
 	AddDefaultAbilitiesToTheAbilitiesToolChest();
 }
 
+void ATheLastKnightCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	UE_LOG(LogTemp, Log, TEXT("Character FSM:"));
+	for (auto&& machine : mStatesMachines)
+	{
+		machine->Update(DeltaSeconds);
+		UE_LOG(LogTemp, Log, TEXT("Character FSM state: %d"), machine->GetCurrentState()->GetID());
+	}
+}
+
 bool ATheLastKnightCharacter::IsWalking() const
 {
 	auto characterMovement = GetCharacterMovement();
@@ -101,9 +121,19 @@ bool ATheLastKnightCharacter::IsCasting() const
 	return mStatesMachines[1]->GetCurrentState()->GetID() == CharacterState::STATE_CASTING;
 }
 
-bool ATheLastKnightCharacter::CanCast() const
+bool ATheLastKnightCharacter::IsReadyToCast() const
 {
-	return mAbilitiesToolChest.CanCast();
+	return mAbilitiesToolChest.IsReadyToCast();
+}
+
+void ATheLastKnightCharacter::PlayCastingAnimation()
+{
+	IsCastingOneHeight = true;
+}
+
+void ATheLastKnightCharacter::StopCastingAnimation()
+{
+	IsCastingOneHeight = false;
 }
 
 bool ATheLastKnightCharacter::CanCast(InputAction action) const
@@ -133,18 +163,6 @@ std::shared_ptr<TLN::IAbility> ATheLastKnightCharacter::Cast()
 	return ability;
 }
 
-void ATheLastKnightCharacter::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	UE_LOG(LogTemp, Log, TEXT("Character FSM:"));
-	for (auto&& machine : mStatesMachines)
-	{
-		machine->Update(DeltaSeconds);
-		UE_LOG(LogTemp, Log, TEXT("Character FSM state: %d"), machine->GetCurrentState()->GetID());
-	}
-}
-
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -158,11 +176,11 @@ void ATheLastKnightCharacter::SetupPlayerInputComponent(class UInputComponent* P
 	PlayerInputComponent->BindAxis("MoveForward", this, &ATheLastKnightCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ATheLastKnightCharacter::MoveRight);
 
-	PlayerInputComponent->BindAction("Ability1", IE_Pressed, this, &ATheLastKnightCharacter::Ability1);
-	PlayerInputComponent->BindAction("Ability1", IE_Released, this, &ATheLastKnightCharacter::StopAbility1);
+	PlayerInputComponent->BindAction<FPressKeyDelegate>("Ability1", IE_Pressed, this, &ATheLastKnightCharacter::PressKey, TLN::InputAction::ABILITY1);
+	PlayerInputComponent->BindAction<FReleaseKeyDelegate>("Ability1", IE_Released, this, &ATheLastKnightCharacter::ReleaseKey, TLN::InputAction::ABILITY1);
 
-	PlayerInputComponent->BindAction("Ability2", IE_Pressed, this, &ATheLastKnightCharacter::Ability2);
-	PlayerInputComponent->BindAction("Ability2", IE_Released, this, &ATheLastKnightCharacter::StopAbility2);
+	PlayerInputComponent->BindAction<FPressKeyDelegate>("Ability2", IE_Pressed, this, &ATheLastKnightCharacter::PressKey, TLN::InputAction::ABILITY2);
+	PlayerInputComponent->BindAction<FReleaseKeyDelegate>("Ability2", IE_Released, this, &ATheLastKnightCharacter::ReleaseKey, TLN::InputAction::ABILITY2);
 
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
@@ -205,15 +223,20 @@ void ATheLastKnightCharacter::CreateAbilityStatesMachine()
 
 	auto idle = std::make_shared<IdleAbility>();
 	auto cast = std::make_shared<Casting>();
+	auto cooldown = std::make_shared<Cooldown>();
 
 	statesMachine->AddState(idle);
 	statesMachine->AddState(cast);
+	statesMachine->AddState(cooldown);
 
 	//from Idle
 	statesMachine->AddTransition(std::make_unique<EnterCast>(idle, cast));
 
 	//from Cast
-	statesMachine->AddTransition(std::make_unique<EnterIdleAbility>(cast, idle));
+	statesMachine->AddTransition(std::make_unique<EnterCooldown>(cast, cooldown));
+
+	//from Cooldown
+	statesMachine->AddTransition(std::make_unique<EnterIdleAbility>(cooldown, idle));
 
 	statesMachine->SetInitialState(idle->GetID());
 
@@ -296,7 +319,7 @@ void ATheLastKnightCharacter::LookUpAtRate(float Rate)
 
 void ATheLastKnightCharacter::MoveForward(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f))
+	if ((Controller != NULL) && (Value != 0.0f) && !IsCasting())
 	{
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -311,7 +334,7 @@ void ATheLastKnightCharacter::MoveForward(float Value)
 
 void ATheLastKnightCharacter::MoveRight(float Value)
 {
-	if ( (Controller != NULL) && (Value != 0.0f) )
+	if ( (Controller != NULL) && (Value != 0.0f) && !IsCasting())
 	{
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -324,25 +347,13 @@ void ATheLastKnightCharacter::MoveRight(float Value)
 	}
 }
 
-void ATheLastKnightCharacter::Ability1()
+void ATheLastKnightCharacter::PressKey(TLN::InputAction action)
 {
-	mInputHandler->Ability1(true);
-	//mIsAbility1Pressed = true;
-	//mAbility1KeyHoldTime = 0.0f;
+	mInputHandler->InsertInput(action, true);
 }
 
-void ATheLastKnightCharacter::StopAbility1()
+void ATheLastKnightCharacter::ReleaseKey(TLN::InputAction action)
 {
-	mInputHandler->Ability1(false);
-	//mIsAbility1Pressed = false;
-}
-
-void ATheLastKnightCharacter::Ability2()
-{
-	mInputHandler->Ability2(true);
-}
-
-void ATheLastKnightCharacter::StopAbility2()
-{
-	mInputHandler->Ability2(false);
+	mInputHandler->InsertInput(action, false);
+	UE_LOG(LogTemp, Log, TEXT("ATheLastKnightCharacter::ReleaseKey"));
 }

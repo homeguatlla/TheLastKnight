@@ -29,7 +29,7 @@ namespace TLN
 			actionToCast = InputAction::ABILITY2;
 			isAbilityPressed = true;
 		}
-
+		
 		return isAbilityPressed && mCharacter->CanCast(actionToCast);
 	}
 };

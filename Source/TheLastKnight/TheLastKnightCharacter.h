@@ -23,6 +23,8 @@ using TLN::ICharacter;
 class UDA_CharacterAbilities;
 
 
+DECLARE_DELEGATE_OneParam(FPressKeyDelegate, TLN::InputAction);
+DECLARE_DELEGATE_OneParam(FReleaseKeyDelegate, TLN::InputAction);
 
 UCLASS(config=Game)
 class ATheLastKnightCharacter : public ACharacter, public ICharacter
@@ -61,7 +63,10 @@ public:
 	bool IsWalking() const override;
 	bool IsIdle() const override;
 	bool IsCasting() const override;
-	bool CanCast() const override;
+	bool IsReadyToCast() const override;
+
+	void PlayCastingAnimation() override;
+	void StopCastingAnimation() override;
 
 	bool CanCast(TLN::InputAction action) const override;
 	std::shared_ptr<TLN::IAbility> Cast() override;
@@ -74,6 +79,10 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	/** Set to true when casting one hand height */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Animation)
+	bool IsCastingOneHeight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attributes")
 	UDA_CharacterAttributes* CharacterAttributes;
@@ -112,13 +121,8 @@ protected:
 
 	void Tick(float DeltaSeconds) override;
 	
-	void Ability1();
-
-	void StopAbility1();
-
-	void Ability2();
-
-	void StopAbility2();
+	void PressKey(TLN::InputAction action);
+	void ReleaseKey(TLN::InputAction action);
 
 protected:
 	// APawn interface

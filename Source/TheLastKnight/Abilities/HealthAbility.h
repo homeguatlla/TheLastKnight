@@ -18,6 +18,7 @@ namespace TLN
 		HealthAbility(AAbility* ability, UDA_CharacterAbility* abilityDA);
 		static std::string GetName() { return "HealthAbility"; }
 		static std::shared_ptr<IAbility> Create(AAbility* ability, UDA_CharacterAbility* abilityDA);
-		void DoCast(const FVector& location) override;
+		void DoStartCasting(const FVector& location) override;
+		void DoCast() override;
 	};
 };

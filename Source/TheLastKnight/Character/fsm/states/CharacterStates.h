@@ -12,5 +12,6 @@ namespace TLN
 
 		STATE_IDLE_ABILITY = 10,
 		STATE_CASTING = 11,
+		STATE_COOLDOWN = 12
 	};
 };

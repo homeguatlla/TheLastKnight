@@ -16,7 +16,7 @@ namespace TLN
 		mAbilitiesInToolBelt[action] = index;
 	}
 
-	bool AbilitiesToolChest::CanCast() const
+	bool AbilitiesToolChest::IsReadyToCast() const
 	{
 		for (auto&& ability : mAbilitiesInToolBelt)
 		{

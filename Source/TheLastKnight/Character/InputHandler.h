@@ -32,11 +32,8 @@ namespace TLN
 			InputHandler() = default;
 			~InputHandler() = default;
 
-			void Use(bool pressed);
-			void Ability1(bool pressed);
-			void Ability2(bool pressed);
-
 			bool IsActionPressed(InputAction action) const;
 			const Action GetAction(InputAction action) const;
+			void InsertInput(InputAction action, bool pressed);
 	};
 };

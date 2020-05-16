@@ -3,9 +3,12 @@
 
 namespace TLN
 {
-	AbilityBase::AbilityBase(int cost, float maxCooldownTime) :
+	AbilityBase::AbilityBase(int cost, float maxCastingTime, float maxCooldownTime) :
 		mCastCost{cost},
-		mMaxCooldownTime{maxCooldownTime}
+		mMaxCastingTime{maxCastingTime},
+		mCastingTime{ 0.0f },
+		mMaxCooldownTime{maxCooldownTime},
+		mCooldownTimer{ 0.0f }
 	{
 	}
 
@@ -16,8 +19,9 @@ namespace TLN
 
 	void AbilityBase::Cast(const FVector& location)
 	{
-		mCooldownTimer = mMaxCooldownTime;
-		DoCast(location);
+		mCastingTime = mMaxCastingTime;
+		mCooldownTimer = mMaxCooldownTime + mMaxCastingTime;
+		DoStartCasting(location);
 	}
 
 	int AbilityBase::GetCastCost()
@@ -27,7 +31,20 @@ namespace TLN
 
 	void AbilityBase::Update(float deltaTime)
 	{
+		if (mCastingTime > 0.0f)
+		{
+			mCastingTime -= deltaTime;
+			if (mCastingTime <= 0.0f)
+			{
+				DoCast();
+			}
+		}
 		mCooldownTimer -= deltaTime;
+	}
+
+	bool AbilityBase::IsCasting() const
+	{
+		return mCastingTime > 0.0f;
 	}
 
 	bool AbilityBase::IsReadyToCast() const

@@ -6,7 +6,7 @@
 namespace TLN
 {
 	HealthAbility::HealthAbility(AAbility* ability, UDA_CharacterAbility* abilityDA) :
-		AbilityBase(abilityDA->GetManaCost(), abilityDA->GetCooldownTime()),
+		AbilityBase(abilityDA->GetManaCost(), abilityDA->GetCastingTime(), abilityDA->GetCooldownTime()),
 		mAAbility{ ability }
 	{
 		auto healthAbilityDA = dynamic_cast<UDA_HealthAbility*>(abilityDA);
@@ -18,11 +18,21 @@ namespace TLN
 		return std::make_shared<HealthAbility>(ability, abilityDA);
 	}
 
-	void HealthAbility::DoCast(const FVector& location)
+	void HealthAbility::DoStartCasting(const FVector& location)
 	{
 		if (mAAbility->IsValidLowLevel())
 		{
-			mAAbility->OnCast(location);
+			mAAbility->OnStartCasting(location);
+		}
+	}
+
+	void HealthAbility::DoCast()
+	{
+		//Logic here, increment life
+
+		if (mAAbility->IsValidLowLevel())
+		{
+			mAAbility->OnCast();
 		}
 	}
 }

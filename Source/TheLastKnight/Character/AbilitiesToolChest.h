@@ -20,7 +20,7 @@ namespace TLN
 			int AddAbility(std::shared_ptr<IAbility> ability);
 			void BindAbilityToToolBelt(InputAction action, int index);
 			bool CanCast(InputAction action, int availableMana) const;
-			bool CanCast() const;
+			bool IsReadyToCast() const;
 			std::shared_ptr<IAbility> GetAbility(InputAction action);
 			const std::shared_ptr<IAbility> GetAbility(InputAction action) const;
 	};

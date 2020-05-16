@@ -21,7 +21,11 @@ class THELASTKNIGHT_API UDA_CharacterAbility : public UPrimaryDataAsset
 	UPROPERTY(EditAnywhere, Category = "Character Ability")
 	uint8 ManaCost;
 
-	/** Cooldown time until the ability could be cast again */
+	/** Casting time until the ability is effective. Usually is the animation time. */
+	UPROPERTY(EditAnywhere, Category = "Character Ability")
+	float CastingTime;
+
+	/** Cooldown time until the ability could be cast again. */
 	UPROPERTY(EditAnywhere, Category = "Character Ability")
 	float CooldownTime;
 
@@ -34,6 +38,7 @@ class THELASTKNIGHT_API UDA_CharacterAbility : public UPrimaryDataAsset
 
 public:
 	uint8 GetManaCost() const { return ManaCost; }
+	float GetCastingTime() const { return CastingTime; }
 	float GetCooldownTime() const { return CooldownTime; }
 	TSubclassOf<AAbility> GetAbilityClass() const { return AbilityClass; }
 	std::string GetLogicClassName() const { return std::string(TCHAR_TO_UTF8(*LogicClassName)); }

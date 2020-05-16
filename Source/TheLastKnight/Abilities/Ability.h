@@ -13,5 +13,9 @@ class AAbility : public AActor
 
 		/*Ability is being cast*/
 		UFUNCTION(BlueprintImplementableEvent, Category = "Ability")
-		void OnCast(const FVector& location);
+		void OnStartCasting(const FVector& location);
+
+		/*Ability is being effective*/
+		UFUNCTION(BlueprintImplementableEvent, Category = "Ability")
+		void OnCast();
 };

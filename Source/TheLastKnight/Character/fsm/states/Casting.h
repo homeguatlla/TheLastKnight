@@ -18,6 +18,7 @@ namespace TLN
 		void OnInit() override;
 		void OnEnter(float deltaTime) override;
 		void OnUpdate(float deltaTime) override;
+		void OnExit(float deltaTime) override;
 
 	private:
 		ICharacter* mCharacter;

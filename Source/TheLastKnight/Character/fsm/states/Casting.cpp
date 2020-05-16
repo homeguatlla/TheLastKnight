@@ -12,11 +12,18 @@ namespace TLN
 
 	void Casting::OnEnter(float deltaTime)
 	{
+		mCharacter->PlayCastingAnimation();
 		mAbility = mCharacter->Cast();
+		GetContext()->SetAbility(mAbility);
 	}
 
 	void Casting::OnUpdate(float deltaTime)
 	{
 		mAbility->Update(deltaTime);
+	}
+
+	void Casting::OnExit(float deltaTime)
+	{
+		mCharacter->StopCastingAnimation();
 	}
 };
