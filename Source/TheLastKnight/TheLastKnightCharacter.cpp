@@ -36,6 +36,8 @@
 #include <TheLastKnight/Abilities/DataAssets/DA_CharacterAbilities.h>
 #include <TheLastKnight/Abilities/DataAssets/DA_CharacterAbility.h>
 
+#include <TheLastKnight/TheLastKnightGameMode.h>
+
 #include <memory>
 
 #include <cassert>
@@ -85,6 +87,7 @@ void ATheLastKnightCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	mInputHandler = std::make_shared<InputHandler>();
+	mAttributes = std::make_shared<TLN::CharacterAttributes>();
 
 	FillUpCharacterAttributes();
 	FillUpAbilitiesFactory();
@@ -92,9 +95,20 @@ void ATheLastKnightCharacter::BeginPlay()
 	AddDefaultAbilitiesToTheAbilitiesToolChest();
 }
 
+void ATheLastKnightCharacter::NotifyStartAttributeValues()
+{
+	auto gameMode = GetWorld()->GetAuthGameMode<ATheLastKnightGameMode>();
+	if (gameMode)
+	{
+		gameMode->GetEventDispatcher()->OnUpdateHealth.Broadcast(mAttributes->GetHealth());
+	}
+}
+
 void ATheLastKnightCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	NotifyStartAttributeValues();
 
 	UE_LOG(LogTemp, Log, TEXT("Character FSM:"));
 	for (auto&& machine : mStatesMachines)
@@ -138,12 +152,13 @@ void ATheLastKnightCharacter::StopCastingAnimation()
 
 bool ATheLastKnightCharacter::CanCast(InputAction action) const
 {
-	return mAbilitiesToolChest.CanCast(action, mAttributes.GetMana());
+	return mAbilitiesToolChest.CanCast(action, mAttributes->GetMana());
 }
 
 std::shared_ptr<TLN::IAbility> ATheLastKnightCharacter::Cast()
 {
-	TLN::InputAction action;
+	TLN::InputAction action = InputAction::ABILITY1;
+
 	if (mInputHandler->IsActionPressed(InputAction::ABILITY1))
 	{
 		action = InputAction::ABILITY1;
@@ -156,8 +171,8 @@ std::shared_ptr<TLN::IAbility> ATheLastKnightCharacter::Cast()
 	auto ability = mAbilitiesToolChest.GetAbility(action);
 	if (ability)
 	{
-		mAttributes.SetMana(mAttributes.GetMana() - ability->GetCastCost());
-		ability->Cast(GetActorLocation());
+		mAttributes->SetMana(mAttributes->GetMana() - ability->GetCastCost());
+		ability->CastSpell(GetActorLocation());
 	}
 
 	return ability;
@@ -256,11 +271,11 @@ void ATheLastKnightCharacter::FillUpCharacterAttributes()
 	{
 		uint8 maxHealth = CharacterAttributes->GetMaxHealth();
 		assert(maxHealth > 0);
-		mAttributes.SetMaxHealth(maxHealth);
+		mAttributes->SetMaxHealth(maxHealth);
 
 		uint8 maxMana = CharacterAttributes->GetMaxMana();
 		assert(maxMana > 0);
-		mAttributes.SetMaxMana(maxMana);
+		mAttributes->SetMaxMana(maxMana);
 	}
 }
 
@@ -269,9 +284,9 @@ void ATheLastKnightCharacter::FillUpAbilitiesFactory()
 	mAbilitiesFactory = std::make_shared<AbilitiesFactory>(mCharacterAbilities);
 	mAbilitiesFactory->Register(
 		HealthAbility::GetName(), 
-		[](AAbility* ability, UDA_CharacterAbility* abilityDA) 
+		[this](AAbility* ability, UDA_CharacterAbility* abilityDA) 
 		{
-			return HealthAbility::Create(ability, abilityDA);
+			return HealthAbility::Create(ability, abilityDA, mAttributes);
 		}
 	);
 }
@@ -288,7 +303,6 @@ void ATheLastKnightCharacter::PerformMovement()
 {
 	
 }
-
 
 void ATheLastKnightCharacter::OnResetVR()
 {
@@ -355,5 +369,4 @@ void ATheLastKnightCharacter::PressKey(TLN::InputAction action)
 void ATheLastKnightCharacter::ReleaseKey(TLN::InputAction action)
 {
 	mInputHandler->InsertInput(action, false);
-	UE_LOG(LogTemp, Log, TEXT("ATheLastKnightCharacter::ReleaseKey"));
 }

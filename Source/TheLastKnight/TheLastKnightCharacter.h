@@ -40,7 +40,8 @@ class ATheLastKnightCharacter : public ACharacter, public ICharacter
 	class UCameraComponent* FollowCamera;
 
 	//Custom attributes
-	TLN::CharacterAttributes mAttributes;
+	std::shared_ptr<TLN::CharacterAttributes> mAttributes;
+
 	//Abilities Tool Chest
 	TLN::AbilitiesToolChest mAbilitiesToolChest;
 
@@ -136,6 +137,7 @@ private:
 	void FillUpCharacterAttributes();
 	void FillUpAbilitiesFactory();
 	void AddDefaultAbilitiesToTheAbilitiesToolChest();
+	void NotifyStartAttributeValues();
 
 	//inherit from TLN::ICharacter
 	void PerformMovement() override;

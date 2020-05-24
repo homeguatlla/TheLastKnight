@@ -17,7 +17,7 @@ namespace TLN
 		return availableMana >= mCastCost && IsReadyToCast();
 	}
 
-	void AbilityBase::Cast(const FVector& location)
+	void AbilityBase::CastSpell(const FVector& location)
 	{
 		mCastingTime = mMaxCastingTime;
 		mCooldownTimer = mMaxCooldownTime + mMaxCastingTime;
@@ -36,7 +36,7 @@ namespace TLN
 			mCastingTime -= deltaTime;
 			if (mCastingTime <= 0.0f)
 			{
-				DoCast();
+				DoCastSpell();
 			}
 		}
 		mCooldownTimer -= deltaTime;

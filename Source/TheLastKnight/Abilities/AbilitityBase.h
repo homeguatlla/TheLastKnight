@@ -14,10 +14,10 @@ namespace TLN
 
 		public:
 			AbilityBase(int cost, float maxCastingTime, float maxCooldownTime);
-			~AbilityBase() = default;
+			virtual ~AbilityBase() = default;
 
 			bool CanCast(int availableMana) const override;
-			void Cast(const FVector& location) override;
+			void CastSpell(const FVector& location) override;
 			int GetCastCost() override;
 			void Update(float deltaTime) override;
 			bool IsCasting() const override;
@@ -25,6 +25,6 @@ namespace TLN
 
 		protected:
 			virtual void DoStartCasting(const FVector& location) = 0;
-			virtual void DoCast() = 0;
+			virtual void DoCastSpell() = 0;
 	};
 };

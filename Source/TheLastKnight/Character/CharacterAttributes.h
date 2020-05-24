@@ -1,8 +1,8 @@
 #pragma once
+#include <algorithm>
 
 namespace TLN
 {
-
 	class CharacterAttributes
 	{
 	public:
@@ -14,8 +14,8 @@ namespace TLN
 
 		void SetMaxHealth(unsigned int health) { mMaxHealth = health; mHealth = health; }
 		void SetMaxMana(unsigned int mana) { mMaxMana = mana; mMana = mana; }
-		void SetHealth(unsigned int health) { mHealth = health; }
-		void SetMana(unsigned int mana) { mMana = mana; }
+		void SetHealth(unsigned int health) { mHealth = std::min(std::max(0u, health), mMaxHealth); }
+		void SetMana(unsigned int mana) { mMana = std::min(std::max(0u, mana), mMaxMana); }
 
 	private:
 		unsigned int mMaxHealth;

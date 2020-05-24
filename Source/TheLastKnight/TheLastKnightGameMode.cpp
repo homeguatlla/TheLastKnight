@@ -21,3 +21,22 @@ ATheLastKnightGameMode::ATheLastKnightGameMode()
 		HUDClass = CharacterHUDBPClass.Class;
 	}
 }
+
+void ATheLastKnightGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	FActorSpawnParameters spawnInfo;
+	spawnInfo.Owner = this;
+	//spawnInfo.Instigator = this;
+	spawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+
+	mEventDispatcher = GetWorld()->SpawnActor<AEventDispatcher>(
+		AEventDispatcher::StaticClass(),
+		FVector::ZeroVector,
+		FRotator::ZeroRotator,
+		spawnInfo);
+
+	mEventDispatcher->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
+}

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include <TheLastKnight/EventDispatcher.h>
 #include "TheLastKnightGameMode.generated.h"
 
 UCLASS(minimalapi)
@@ -13,6 +14,18 @@ class ATheLastKnightGameMode : public AGameModeBase
 
 public:
 	ATheLastKnightGameMode();
+
+	AEventDispatcher* GetEventDispatcher() { return mEventDispatcher; }
+
+	/** Blueprint class which manage events with HUD */
+	UPROPERTY(EditAnywhere, Category = "HUD Event Dispatcher")
+	TSubclassOf<AEventDispatcher> HUDEventDispatcherClass;
+
+protected:
+	void BeginPlay() override;
+
+private:
+	AEventDispatcher* mEventDispatcher;
 };
 
 

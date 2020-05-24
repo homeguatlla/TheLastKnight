@@ -17,7 +17,7 @@ namespace TLN
 	bool EnterCast::CanPerformTransition() const
 	{
 		bool isAbilityPressed = false;
-		InputAction actionToCast;
+		InputAction actionToCast = InputAction::ABILITY1;
 
 		if (mInputHandler->IsActionPressed(InputAction::ABILITY1))
 		{
