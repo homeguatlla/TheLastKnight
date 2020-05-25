@@ -47,7 +47,8 @@ using namespace TLN;
 //////////////////////////////////////////////////////////////////////////
 // ATheLastKnightCharacter
 
-ATheLastKnightCharacter::ATheLastKnightCharacter()
+ATheLastKnightCharacter::ATheLastKnightCharacter() :
+	mHasNotifiedData {false}
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -108,7 +109,11 @@ void ATheLastKnightCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	NotifyStartAttributeValues();
+	if (!mHasNotifiedData)
+	{
+		NotifyStartAttributeValues();
+		mHasNotifiedData = true;
+	}
 
 	UE_LOG(LogTemp, Log, TEXT("Character FSM:"));
 	for (auto&& machine : mStatesMachines)

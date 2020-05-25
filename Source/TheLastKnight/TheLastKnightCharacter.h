@@ -55,6 +55,8 @@ class ATheLastKnightCharacter : public ACharacter, public ICharacter
 
 	std::shared_ptr<TLN::AbilitiesFactory> mAbilitiesFactory;
 
+	bool mHasNotifiedData;
+
 public:
 	ATheLastKnightCharacter();
 
