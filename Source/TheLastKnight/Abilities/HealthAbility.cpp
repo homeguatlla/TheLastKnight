@@ -10,7 +10,8 @@ namespace TLN
 	HealthAbility::HealthAbility(AAbility* ability, UDA_CharacterAbility* abilityDA, std::shared_ptr<TLN::CharacterAttributes> attributes) :
 		AbilityBase(abilityDA->GetManaCost(), abilityDA->GetCastingTime(), abilityDA->GetCooldownTime()),
 		mAAbility{ ability },
-		mCharacterAttributes { attributes }
+		mCharacterAttributes { attributes },
+		mAbilityDA { abilityDA }
 	{
 		auto healthAbilityDA = dynamic_cast<UDA_HealthAbility*>(abilityDA);
 		mPercentage = healthAbilityDA->GetHealPercentage();
@@ -38,6 +39,11 @@ namespace TLN
 		{
 			mAAbility->OnCast();
 		}
+	}
+
+	UTexture2D* HealthAbility::GetIcon() const
+	{ 
+		return mAbilityDA->GetIcon(); 
 	}
 
 	void HealthAbility::NotifyUpdateHealth()

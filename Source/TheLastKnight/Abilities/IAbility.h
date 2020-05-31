@@ -1,6 +1,9 @@
 #pragma once
 #include "CoreMinimal.h"
 
+class AAbility;
+class UTexture2D;
+
 namespace TLN
 {
 	class IAbility
@@ -12,6 +15,8 @@ namespace TLN
 			virtual void Update(float deltaTime) = 0;
 			virtual bool IsCasting() const = 0;
 			virtual bool IsReadyToCast() const = 0;
-			//void Empty() {};
+
+			virtual AAbility* GetAbilityActor() const = 0;
+			virtual UTexture2D* GetIcon() const = 0;
 	};
 };

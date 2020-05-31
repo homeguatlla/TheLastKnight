@@ -36,10 +36,15 @@ class THELASTKNIGHT_API UDA_CharacterAbility : public UPrimaryDataAsset
 	UPROPERTY(EditAnywhere, Category = "Character Ability")
 	FString LogicClassName;
 
+
+	UPROPERTY(EditAnywhere, Category = "Character Ability")
+	UTexture2D* Icon;
+
 public:
 	uint8 GetManaCost() const { return ManaCost; }
 	float GetCastingTime() const { return CastingTime; }
 	float GetCooldownTime() const { return CooldownTime; }
+	UTexture2D* GetIcon() const { return Icon; }
 	TSubclassOf<AAbility> GetAbilityClass() const { return AbilityClass; }
 	std::string GetLogicClassName() const { return std::string(TCHAR_TO_UTF8(*LogicClassName)); }
 };

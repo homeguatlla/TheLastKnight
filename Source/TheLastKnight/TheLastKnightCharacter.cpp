@@ -112,6 +112,7 @@ void ATheLastKnightCharacter::Tick(float DeltaSeconds)
 	if (!mHasNotifiedData)
 	{
 		NotifyStartAttributeValues();
+		mAbilitiesToolBelt.Initialize();
 		mHasNotifiedData = true;
 	}
 
@@ -142,7 +143,7 @@ bool ATheLastKnightCharacter::IsCasting() const
 
 bool ATheLastKnightCharacter::IsReadyToCast() const
 {
-	return mAbilitiesToolChest.IsReadyToCast();
+	return mAbilitiesToolBelt.IsReadyToCast();
 }
 
 void ATheLastKnightCharacter::PlayCastingAnimation()
@@ -157,7 +158,7 @@ void ATheLastKnightCharacter::StopCastingAnimation()
 
 bool ATheLastKnightCharacter::CanCast(InputAction action) const
 {
-	return mAbilitiesToolChest.CanCast(action, mAttributes->GetMana());
+	return mAbilitiesToolBelt.CanCast(action, mAttributes->GetMana());
 }
 
 std::shared_ptr<TLN::IAbility> ATheLastKnightCharacter::Cast()
@@ -173,7 +174,7 @@ std::shared_ptr<TLN::IAbility> ATheLastKnightCharacter::Cast()
 		action = InputAction::ABILITY2;
 	}
 
-	auto ability = mAbilitiesToolChest.GetAbility(action);
+	auto ability = mAbilitiesToolBelt.GetAbility(action);
 	if (ability)
 	{
 		mAttributes->SetMana(mAttributes->GetMana() - ability->GetCastCost());
@@ -299,9 +300,9 @@ void ATheLastKnightCharacter::FillUpAbilitiesFactory()
 void ATheLastKnightCharacter::AddDefaultAbilitiesToTheAbilitiesToolChest()
 {
 	auto ability = mAbilitiesFactory->Create(HealthAbility::GetName(), GetWorld(), this);
-	auto index = mAbilitiesToolChest.AddAbility(ability);
-	mAbilitiesToolChest.BindAbilityToToolBelt(TLN::InputAction::ABILITY1, index);
-	mAbilitiesToolChest.BindAbilityToToolBelt(TLN::InputAction::ABILITY2, index);
+	auto index = mAbilitiesToolBelt.AddAbility(ability);
+	mAbilitiesToolBelt.BindAbilityToToolBelt(TLN::InputAction::ABILITY1, index);
+	mAbilitiesToolBelt.BindAbilityToToolBelt(TLN::InputAction::ABILITY2, index);
 }
 
 void ATheLastKnightCharacter::PerformMovement()

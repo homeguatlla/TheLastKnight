@@ -22,7 +22,7 @@ namespace TLN
 			void Update(float deltaTime) override;
 			bool IsCasting() const override;
 			bool IsReadyToCast() const override;
-
+			
 		protected:
 			virtual void DoStartCasting(const FVector& location) = 0;
 			virtual void DoCastSpell() = 0;

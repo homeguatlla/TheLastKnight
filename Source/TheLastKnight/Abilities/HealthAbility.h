@@ -6,6 +6,7 @@
 
 
 class AAbility;
+class UTexture2D;
 class UDA_CharacterAbility;
 
 namespace TLN
@@ -17,6 +18,7 @@ namespace TLN
 		float mPercentage;
 		AAbility* mAAbility;
 		std::shared_ptr<TLN::CharacterAttributes> mCharacterAttributes;
+		UDA_CharacterAbility* mAbilityDA;
 
 	public:
 		HealthAbility(AAbility* ability, UDA_CharacterAbility* abilityDA, std::shared_ptr<TLN::CharacterAttributes> attributes);
@@ -25,6 +27,9 @@ namespace TLN
 		static std::shared_ptr<IAbility> Create(AAbility* ability, UDA_CharacterAbility* abilityDA, std::shared_ptr<TLN::CharacterAttributes> attributes);
 		void DoStartCasting(const FVector& location) override;
 		void DoCastSpell() override;
+
+		AAbility* GetAbilityActor() const  override { return mAAbility; }
+		UTexture2D* GetIcon() const  override;
 
 	private:
 		void IncrementLife();

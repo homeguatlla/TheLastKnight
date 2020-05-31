@@ -14,6 +14,7 @@
 #include <TheLastKnight/Character/ICharacter.h>
 #include <TheLastKnight/Character/InputHandler.h>
 #include <TheLastKnight/Character/AbilitiesToolChest.h>
+#include <TheLastKnight/Character/AbilitiesToolBelt.h>
 #include <TheLastKnight/Abilities/AbilitiesFactory.h>
 #include <vector>
 #include "TheLastKnightCharacter.generated.h"
@@ -43,7 +44,9 @@ class ATheLastKnightCharacter : public ACharacter, public ICharacter
 	std::shared_ptr<TLN::CharacterAttributes> mAttributes;
 
 	//Abilities Tool Chest
-	TLN::AbilitiesToolChest mAbilitiesToolChest;
+	//TLN::AbilitiesToolChest mAbilitiesToolChest;
+	//Abilities Tool belt
+	TLN::AbilitiesToolBelt mAbilitiesToolBelt;
 
 	//States machine to control character states
 	using StatesMachine = core::utils::FSM::StatesMachine<TLN::CharacterState, TLN::CharacterContext>;

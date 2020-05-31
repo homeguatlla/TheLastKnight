@@ -7,7 +7,7 @@
 #include <Kismet/GameplayStatics.h>
 
 
-ACharacterHUD::ACharacterHUD()
+ACharacterHUD::ACharacterHUD() : mHudIndex{0}
 {
 
 }
@@ -16,15 +16,8 @@ void ACharacterHUD::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (HUDWidgetClass != nullptr)
-	{
-		mHUDWidget = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetClass);
-		
-		if (mHUDWidget)
-		{
-			mHUDWidget->AddToViewport();
-		}	
-	}
+	mHUDWidget = CreateHUDFromClass<UUserWidget>(HUDWidgetClass);
+	mAbilitiesToolBeltHUDWidget = CreateHUDFromClass<UUserWidget>(AbilitiesToolBeltHUDWidgetClass);
 
 	BindToDelegate();
 }
@@ -35,16 +28,22 @@ void ACharacterHUD::BindToDelegate()
 	if (gameMode)
 	{
 		gameMode->GetEventDispatcher()->OnUpdateHealth.AddDynamic(this, &ACharacterHUD::OnUpdateHealthReceived);
+		gameMode->GetEventDispatcher()->OnAddAbilityIntoToolBelt.AddDynamic(this, &ACharacterHUD::OnAddAbilityIntoToolBeltReceived);
 	}
 }
 
 void ACharacterHUD::OnUpdateHealthReceived(float health)
 {
-	//bool usesInterface = mHUDWidget->Implements<IInterfaceHUD>();
 	if (mHUDWidget->GetClass()->ImplementsInterface(UHealthHUD::StaticClass()))
 	{
-		//auto interfaceHUD = Cast<IInterfaceHUD>(mHUDWidget);
 		IHealthHUD::Execute_OnUpdateHealth(mHUDWidget, health);
-		//interfaceHUD->Execute_OnUpdateHealth(mHUDWidget, health);
+	}
+}
+
+void ACharacterHUD::OnAddAbilityIntoToolBeltReceived(UTexture2D* icon, int slot)
+{
+	if (mAbilitiesToolBeltHUDWidget->GetClass()->ImplementsInterface(UAbilitiesToolBeltHUD::StaticClass()))
+	{
+		IAbilitiesToolBeltHUD::Execute_OnAddAbilityIntoToolBelt(mAbilitiesToolBeltHUDWidget, icon, slot);
 	}
 }
