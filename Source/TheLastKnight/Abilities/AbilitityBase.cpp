@@ -26,6 +26,7 @@ namespace TLN
 		mCastingTime = mMaxCastingTime;
 		mCooldownTimer = mMaxCooldownTime + mMaxCastingTime;
 		DoStartCasting(location);
+		NotifyStartCasting();
 	}
 
 	int AbilityBase::GetCastCost()
@@ -41,9 +42,19 @@ namespace TLN
 			if (mCastingTime <= 0.0f)
 			{
 				DoCastSpell();
+				NotifyCast();
 			}
 		}
+		else
+		{
+			NotifyCooldownTime(mCooldownTimer);
+		}
+
 		mCooldownTimer -= deltaTime;
+		if (IsReadyToCast())
+		{
+			NotifyReadyToCast();
+		}
 	}
 
 	bool AbilityBase::IsCasting() const
@@ -54,6 +65,26 @@ namespace TLN
 	bool AbilityBase::IsReadyToCast() const
 	{
 		return mCooldownTimer <= 0.0f;
+	}
+
+	void AbilityBase::NotifyStartCasting()
+	{
+		GetEventDispatcher()->OnNotifyStartCasting.Broadcast(mAAbility->GetName());
+	}
+
+	void AbilityBase::NotifyCast()
+	{
+		GetEventDispatcher()->OnNotifyCast.Broadcast(mAAbility->GetName());
+	}
+
+	void AbilityBase::NotifyCooldownTime(float time)
+	{
+		GetEventDispatcher()->OnNotifyCooldownTime.Broadcast(mAAbility->GetName(), time);
+	}
+
+	void AbilityBase::NotifyReadyToCast()
+	{
+		GetEventDispatcher()->OnNotifyReadyToCast.Broadcast(mAAbility->GetName());
 	}
 
 	AEventDispatcher* AbilityBase::GetEventDispatcher() const

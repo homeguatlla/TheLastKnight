@@ -27,6 +27,11 @@ namespace TLN
 			virtual void DoCastSpell() = 0;
 
 			AEventDispatcher* GetEventDispatcher() const;
+	private:
+		void NotifyStartCasting();
+		void NotifyCast();
+		void NotifyCooldownTime(float time);
+		void NotifyReadyToCast();
 
 		private:
 			int mCastCost;

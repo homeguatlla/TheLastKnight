@@ -26,6 +26,15 @@ public:
 	UFUNCTION()
 	void OnAddAbilityIntoToolBeltReceived(UTexture2D* icon, int slot);
 
+	UFUNCTION()
+	void OnNotifyStartCastingReceived(const FString& name);
+	UFUNCTION()
+	void OnNotifyCastReceived(const FString& name);
+	UFUNCTION()
+	void OnNotifyCooldownTimeReceived(const FString& name, float remainingTime);
+	UFUNCTION()
+	void OnNotifyReadyToCastReceived(const FString& name);
+
 	//inherit from IHealthHUD
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Health")
 	void OnUpdateHealth(float health);
@@ -33,6 +42,16 @@ public:
 	//inherit from IAbilitiesToolBeltHUD
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Tool Belt")
 	void OnAddAbilityIntoToolBelt(UTexture2D* icon, int slot);
+
+	//inherit from AbilityBase
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Ability")
+	void OnNotifyStartCasting(const FString& name);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Ability")
+	void OnNotifyCast(const FString& name);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Ability")
+	void OnNotifyCooldownTime(const FString& name, float remainingTime);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Ability")
+	void OnNotifyReadyToCast(const FString& name);
 
 private:
 	void BindToDelegate();
