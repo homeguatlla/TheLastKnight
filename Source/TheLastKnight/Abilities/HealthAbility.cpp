@@ -2,14 +2,14 @@
 #include <TheLastKnight/Abilities/Ability.h>
 #include <TheLastKnight/Abilities/DataAssets/DA_CharacterAbility.h>
 #include <TheLastKnight/Abilities/DataAssets/DA_HealthAbility.h>
-#include <TheLastKnight/TheLastKnightGameMode.h>
+
 #include <TheLastKnight/Character/CharacterAttributes.h>
+#include <TheLastKnight/EventDispatcher.h>
 
 namespace TLN
 {
 	HealthAbility::HealthAbility(AAbility* ability, UDA_CharacterAbility* abilityDA, std::shared_ptr<TLN::CharacterAttributes> attributes) :
-		AbilityBase(abilityDA->GetManaCost(), abilityDA->GetCastingTime(), abilityDA->GetCooldownTime()),
-		mAAbility{ ability },
+		AbilityBase(ability, abilityDA->GetManaCost(), abilityDA->GetCastingTime(), abilityDA->GetCooldownTime()),
 		mCharacterAttributes { attributes },
 		mAbilityDA { abilityDA }
 	{
@@ -48,11 +48,7 @@ namespace TLN
 
 	void HealthAbility::NotifyUpdateHealth()
 	{
-		auto gameMode = mAAbility->GetWorld()->GetAuthGameMode<ATheLastKnightGameMode>();
-		if (gameMode->IsValidLowLevel())
-		{
-			gameMode->GetEventDispatcher()->OnUpdateHealth.Broadcast(mCharacterAttributes->GetHealth());
-		}
+		GetEventDispatcher()->OnUpdateHealth.Broadcast(mCharacterAttributes->GetHealth());
 	}
 
 	void HealthAbility::IncrementLife()

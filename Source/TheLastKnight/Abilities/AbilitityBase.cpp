@@ -1,14 +1,18 @@
 
 #include <TheLastKnight/Abilities/AbilitityBase.h>
+#include <TheLastKnight/Abilities/Ability.h>
+#include <TheLastKnight/TheLastKnightGameMode.h>
+#include <TheLastKnight/EventDispatcher.h>
 
 namespace TLN
 {
-	AbilityBase::AbilityBase(int cost, float maxCastingTime, float maxCooldownTime) :
+	AbilityBase::AbilityBase(AAbility* ability, int cost, float maxCastingTime, float maxCooldownTime) :
 		mCastCost{cost},
 		mMaxCastingTime{maxCastingTime},
 		mCastingTime{ 0.0f },
 		mMaxCooldownTime{maxCooldownTime},
-		mCooldownTimer{ 0.0f }
+		mCooldownTimer{ 0.0f },
+		mAAbility { ability }
 	{
 	}
 
@@ -50,5 +54,15 @@ namespace TLN
 	bool AbilityBase::IsReadyToCast() const
 	{
 		return mCooldownTimer <= 0.0f;
+	}
+
+	AEventDispatcher* AbilityBase::GetEventDispatcher() const
+	{
+		auto gameMode = mAAbility->GetWorld()->GetAuthGameMode<ATheLastKnightGameMode>();
+		if (gameMode->IsValidLowLevel())
+		{
+			return gameMode->GetEventDispatcher();
+		}
+		return nullptr;
 	}
 }
