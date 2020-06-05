@@ -17,5 +17,5 @@ class IAbilitiesToolBeltHUD
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Tool Belt")
-	void OnAddAbilityIntoToolBelt(UTexture2D* icon, int slot);
+	void OnAddAbilityIntoToolBelt(const FString& name, UTexture2D* icon, int slot);
 };

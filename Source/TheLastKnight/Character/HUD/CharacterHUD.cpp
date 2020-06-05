@@ -46,11 +46,11 @@ void ACharacterHUD::OnUpdateHealthReceived(float health)
 	}
 }
 
-void ACharacterHUD::OnAddAbilityIntoToolBeltReceived(UTexture2D* icon, int slot)
+void ACharacterHUD::OnAddAbilityIntoToolBeltReceived(const FString& name, UTexture2D* icon, int slot)
 {
 	if (mAbilitiesToolBeltHUDWidget->GetClass()->ImplementsInterface(UAbilitiesToolBeltHUD::StaticClass()))
 	{
-		IAbilitiesToolBeltHUD::Execute_OnAddAbilityIntoToolBelt(mAbilitiesToolBeltHUDWidget, icon, slot);
+		IAbilitiesToolBeltHUD::Execute_OnAddAbilityIntoToolBelt(mAbilitiesToolBeltHUDWidget, name, icon, slot);
 	}
 }
 

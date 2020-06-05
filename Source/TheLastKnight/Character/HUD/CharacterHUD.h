@@ -24,7 +24,7 @@ public:
 	UFUNCTION()
 	void OnUpdateHealthReceived(float health);
 	UFUNCTION()
-	void OnAddAbilityIntoToolBeltReceived(UTexture2D* icon, int slot);
+	void OnAddAbilityIntoToolBeltReceived(const FString& name, UTexture2D* icon, int slot);
 
 	UFUNCTION()
 	void OnNotifyStartCastingReceived(const FString& name);
@@ -41,7 +41,7 @@ public:
 
 	//inherit from IAbilitiesToolBeltHUD
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Tool Belt")
-	void OnAddAbilityIntoToolBelt(UTexture2D* icon, int slot);
+	void OnAddAbilityIntoToolBelt(const FString& name, UTexture2D* icon, int slot);
 
 	//inherit from AbilityBase
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Ability")
@@ -81,6 +81,7 @@ private:
 
 		return Cast<InterfaceTypeTarget>(widget);
 	}
+
 public:
 	/** Blueprint class which displays the ability */
 	UPROPERTY(EditAnywhere, Category = "HUD")

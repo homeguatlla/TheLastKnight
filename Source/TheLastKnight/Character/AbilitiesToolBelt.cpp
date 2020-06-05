@@ -42,7 +42,7 @@ namespace TLN
 		auto gameMode = ability->GetWorld()->GetAuthGameMode<ATheLastKnightGameMode>();
 		if (gameMode->IsValidLowLevel())
 		{
-			gameMode->GetEventDispatcher()->OnAddAbilityIntoToolBelt.Broadcast(icon, slot);
+			gameMode->GetEventDispatcher()->OnAddAbilityIntoToolBelt.Broadcast(ability->GetName(), icon, slot);
 		}
 	}
 

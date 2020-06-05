@@ -4,7 +4,7 @@
 #include "EventDispatcher.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateHealth, float, health);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAddAbilityIntoToolBelt, UTexture2D*, icon, int, slot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAddAbilityIntoToolBelt, const FString&, abilityName, UTexture2D*, icon, int, slot);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNotifyStartCasting, const FString&, abilityName);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNotifyCast, const FString&, abilityName);
