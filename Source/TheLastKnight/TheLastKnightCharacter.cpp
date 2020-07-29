@@ -116,11 +116,11 @@ void ATheLastKnightCharacter::Tick(float DeltaSeconds)
 		mHasNotifiedData = true;
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("Character FSM:"));
+	//UE_LOG(LogTemp, Log, TEXT("[TheLastKnightCharacter][Tick] Character FSM:"));
 	for (auto&& machine : mStatesMachines)
 	{
 		machine->Update(DeltaSeconds);
-		UE_LOG(LogTemp, Log, TEXT("Character FSM state: %d"), machine->GetCurrentState()->GetID());
+		//UE_LOG(LogTemp, Log, TEXT("[TheLastKnightCharacter][Tick] Character FSM state: %d"), machine->GetCurrentState()->GetID());
 	}
 }
 
