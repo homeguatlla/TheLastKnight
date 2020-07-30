@@ -19,5 +19,5 @@ ATargetPoint* AAgentAIController::GetRandomWayPoint()
 void AAgentAIController::GoToRandomWayPoint()
 {
 	float acceptanceRadius = 10;
-	auto result = MoveToActor(mWayPoints[0]/*GetRandomWayPoint()*/, acceptanceRadius);
+	auto result = MoveToActor(GetRandomWayPoint(), acceptanceRadius);
 }
