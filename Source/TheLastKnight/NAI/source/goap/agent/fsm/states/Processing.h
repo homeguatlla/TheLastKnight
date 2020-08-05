@@ -1,6 +1,6 @@
 #pragma once
 #include <TheLastKnight/NAI/source/goap/agent/AgentContext.h>
-#include <TheLastKnight/NAI/source/utils/fsm/BaseState.h>
+#include <TheLastKnight/utils/fsm/BaseState.h>
 #include <TheLastKnight/NAI/source/goap/GoapTypes.h>
 #include <vector>
 
