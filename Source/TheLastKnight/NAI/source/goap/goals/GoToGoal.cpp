@@ -1,3 +1,4 @@
+
 #include "GoToGoal.h"
 #include <TheLastKnight/NAI/source/goap/actions/FindPathToAction.h>
 #include <TheLastKnight/NAI/source/goap/actions/FollowPathAction.h>
@@ -8,8 +9,6 @@
 #include <TheLastKnight/NAI/source/goap/GoapUtils.h>
 #include <TheLastKnight/NAI/source/navigation/INavigationPath.h>
 #include <TheLastKnight/NAI/source/navigation/INavigationPlanner.h>
-
-
 #include <vector>
 
 namespace NAI
@@ -21,7 +20,7 @@ namespace NAI
 		{
 		}
 
-		void GoToGoal::Create(std::shared_ptr<IAgent> agent)
+		void GoToGoal::DoCreate(std::shared_ptr<IAgent> agent)
 		{
 			mAgent = agent;
 			mActions.push_back(CreateFindPathToAction(mAgent, mNavigationPlanner));

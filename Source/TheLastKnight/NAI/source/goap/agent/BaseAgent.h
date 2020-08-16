@@ -2,7 +2,7 @@
 #include "IAgent.h"
 #include "AgentContext.h"
 #include <TheLastKnight/NAI/source/goap/GoapTypes.h>
-#include <TheLastKnight/utils/fsm/StatesMachine.h>
+#include <TheLastKnight/NAI/source/utils/fsm/StatesMachine.h>
 #include <TheLastKnight/NAI/source/goap/agent/fsm/states/Planning.h>
 #include <TheLastKnight/NAI/source/goap/agent/fsm/states/Processing.h>
 #include <TheLastKnight/NAI/source/goap/agent/fsm/transitions/EnterPlanning.h>
@@ -17,7 +17,7 @@ namespace NAI
 	{
 		class IGoal;
 
-		class BaseAgent : public IAgent
+		class BaseAgent : public IAgent, public std::enable_shared_from_this<BaseAgent>
 		{
 		public:
 			BaseAgent(	std::shared_ptr<IGoapPlanner> goapPlanner, 
@@ -26,6 +26,7 @@ namespace NAI
 			virtual ~BaseAgent() = default;
 
 			AgentState GetCurrentState() const override;
+			void StartUp() override;
 			void Update(float elapsedTime) override;
 			bool HasPredicate(int predicateID) const override;
 			std::string WhereIam() const override;

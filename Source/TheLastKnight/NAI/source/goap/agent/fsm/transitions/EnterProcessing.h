@@ -1,5 +1,5 @@
 #pragma once
-#include <TheLastKnight/utils/fsm/BaseTransition.h>
+#include <TheLastKnight/NAI/source/utils/fsm/BaseTransition.h>
 #include <TheLastKnight/NAI/source/goap/GoapTypes.h>
 #include <TheLastKnight/NAI/source/goap/agent/AgentContext.h>
 

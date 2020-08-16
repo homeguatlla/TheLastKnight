@@ -21,12 +21,12 @@ namespace NAI
 		{
 		public:
 			GoToGoal(std::shared_ptr<Navigation::INavigationPlanner> navigationPlanner);
-			void Create(std::shared_ptr<IAgent> agent);
 			virtual ~GoToGoal() = default;
 			void OnNavigationPath(const std::string& placeName, std::shared_ptr<Navigation::INavigationPath> path);
 			const unsigned int GetCost(std::vector<std::shared_ptr<IPredicate>>& inputPredicates) const override;
 
 		protected:
+			void DoCreate(std::shared_ptr<IAgent> agent) override;
 			void DoAccomplished(std::vector<std::shared_ptr<IPredicate>>& predicates) override;
 
 		private:

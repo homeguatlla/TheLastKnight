@@ -1,3 +1,4 @@
+
 #include "GoToPredicate.h"
 
 namespace NAI

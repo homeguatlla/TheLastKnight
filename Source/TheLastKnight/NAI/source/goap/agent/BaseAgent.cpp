@@ -1,9 +1,11 @@
+
 #include "BaseAgent.h"
 #include <TheLastKnight/NAI/source/goap/IPredicate.h>
 #include <TheLastKnight/NAI/source/goap/predicates/PlaceIamPredicate.h>
+#include <TheLastKnight/NAI/source/goap/IGoal.h>
 
-#include <algorithm>
 #include <cassert>
+#include <algorithm>
 
 namespace NAI
 {
@@ -18,6 +20,14 @@ namespace NAI
 		{
 			assert(goapPlanner);
 			CreateStatesMachine();
+		}
+
+		void BaseAgent::StartUp()
+		{
+			for (auto&& goal : mGoals)
+			{
+				goal->Create(shared_from_this());
+			}
 		}
 
 		void BaseAgent::Update(float elapsedTime)

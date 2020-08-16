@@ -17,6 +17,7 @@ namespace NAI
 		public:
 			virtual ~IAgent() = default;
 
+			virtual void StartUp() = 0;
 			virtual void Update(float elapsedTime) = 0;
 			virtual AgentState GetCurrentState() const = 0;
 			virtual bool HasPredicate(int predicateID) const = 0;
@@ -25,7 +26,6 @@ namespace NAI
 			virtual std::vector<std::shared_ptr<IGoal>> GetGoals() const = 0;
 			virtual glm::vec3 GetPosition() const = 0;
 			virtual void MoveTo(float elapsedTime, const glm::vec3& point) = 0;
-			void ToBeSupportedByUnreal() {}
 		};
 	}
 }

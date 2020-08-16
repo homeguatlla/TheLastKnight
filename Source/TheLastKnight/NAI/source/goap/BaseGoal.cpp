@@ -1,3 +1,4 @@
+
 #include "BaseGoal.h"
 #include "IAction.h"
 #include "GoapUtils.h"
@@ -20,6 +21,11 @@ namespace NAI
 			mCost{ 0 }
 		{
 			CalculateCost();
+		}
+
+		void BaseGoal::Create(std::shared_ptr<IAgent> agent)
+		{
+			DoCreate(agent);
 		}
 
 		void BaseGoal::CalculateCost()

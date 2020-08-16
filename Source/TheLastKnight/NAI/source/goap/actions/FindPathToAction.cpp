@@ -1,3 +1,4 @@
+
 #include "FindPathToAction.h"
 #include <TheLastKnight/NAI/source/goap/agent/IAgent.h>
 #include <TheLastKnight/NAI/source/goap/goals/GoToGoal.h>

@@ -3,6 +3,8 @@
 #include <TheLastKnight/NAI/source/goap/IGoapPlanner.h>
 #include <TheLastKnight/NAI/source/goap/IGoal.h>
 #include <TheLastKnight/NAI/source/goap/IPredicate.h>
+#include <TheLastKnight/NAI/source/goap/goals/GoToGoal.h>
+#include <TheLastKnight/NAI/source/goap/predicates/GoToPredicate.h>
 #include <TheLastKnight/Agents/AgentBuilder.h>
 #include <TheLastKnight/NAI/source/goap/planners/TreeGoapPlanner.h>
 
@@ -18,17 +20,20 @@ void ANPCAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	mAgent->Update(DeltaTime);
+	if(mAgent != nullptr)
+	{
+		mAgent->Update(DeltaTime);
+	}
 }
 
 FVector ANPCAIController::GetPosition() const
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	return this->GetPosition();
 }
 
 void ANPCAIController::MoveTo(float elapsedTime, const FVector& point)
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	MoveTo(elapsedTime, point);
 }
 
 void ANPCAIController::CreateNavigationPlanner()
@@ -40,7 +45,14 @@ void ANPCAIController::CreateAgent()
 {
 	AgentBuilder builder;
 
-	/*mAgent = builder.AddGoapPlanner(std::make_shared<NAI::Goap::TreeGoapPlanner>())
-					.AddController(std::shared_ptr<IAgentAIController>(this))
-					.Build<NPCAgent>();*/
+	auto goToGoal = std::make_shared<NAI::Goap::GoToGoal>(mNavigationPlanner);
+	auto predicate = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "Saloon");
+
+	mAgent = builder.AddGoapPlanner(std::make_shared<NAI::Goap::TreeGoapPlanner>())
+					.AddController(TWeakObjectPtr<ANPCAIController>(this))
+					.AddGoal(goToGoal)
+					.AddPredicate(predicate)
+					.Build<NPCAgent>();
+
+	mAgent->StartUp();
 }

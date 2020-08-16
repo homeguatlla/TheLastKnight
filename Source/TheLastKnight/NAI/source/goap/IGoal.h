@@ -8,11 +8,13 @@ namespace NAI
 	{
 		class IAction;
 		class IPredicate;
+		class IAgent;
 		
 		class IGoal
 		{
 		public:
 			virtual ~IGoal() = default;
+			virtual void Create(std::shared_ptr<IAgent> agent) = 0;
 			virtual std::shared_ptr<IAction> GetNextAction() = 0;
 			virtual bool HasActions() const = 0;
 			virtual const unsigned int GetCost() const = 0;

@@ -42,7 +42,7 @@ namespace glm
 	/// @param v Coordinates of a translation vector.
 	/// @tparam T Value type used to build the matrix. Currently supported: half (not recommanded), float or double.
 	/// @code
-	/// #include <glm/glm.hpp>
+	/// #include <TheLastKnight/NAI/glm/glm.hpp>
 	/// #include <glm/gtc/matrix_transform.hpp>
 	/// ...
 	/// glm::mat4 m = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f));

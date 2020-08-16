@@ -1,3 +1,4 @@
+
 #include <TheLastKnight/NAI/source/goap/predicates/GoapPredicates.h>
 
 using namespace NAI::Goap;

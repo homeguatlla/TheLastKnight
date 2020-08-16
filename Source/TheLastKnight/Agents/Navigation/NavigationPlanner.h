@@ -1,7 +1,10 @@
 #pragma once
 #include "CoreMinimal.h"
+#include <TheLastKnight/NAI/glm/glm.hpp>
 #include <TheLastKnight/NAI/source/navigation/INavigationPlanner.h>
 #include <memory>
+#include <map>
+#include <string>
 
 namespace NAI {
 	namespace Navigation
@@ -21,6 +24,10 @@ public:
 	unsigned int GetAproxCost(const glm::vec3& origin, const glm::vec3& destination) const override;
 
 private:
+	void CreateLocations();
+
+private:
 	UPROPERTY()
 	TArray<AActor*> mWayPoints;
+	std::map<std::string, glm::vec3> mLocations;
 };

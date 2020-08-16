@@ -1,3 +1,4 @@
+
 #include "FollowPathAction.h"
 #include <TheLastKnight/NAI/source/goap/agent/IAgent.h>
 #include <TheLastKnight/NAI/source/navigation/INavigationPath.h>

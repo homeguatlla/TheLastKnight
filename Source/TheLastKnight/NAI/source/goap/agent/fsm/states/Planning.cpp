@@ -1,3 +1,4 @@
+
 #include "Planning.h"
 #include <TheLastKnight/NAI/source/goap/IGoapPlanner.h>
 

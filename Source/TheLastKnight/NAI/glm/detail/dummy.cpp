@@ -6,7 +6,7 @@
 
 /*
 #define GLM_MESSAGES
-#include <glm/glm.hpp>
+#include <TheLastKnight/NAI/glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <limits>
 

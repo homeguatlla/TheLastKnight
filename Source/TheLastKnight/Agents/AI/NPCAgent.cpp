@@ -4,7 +4,7 @@
 NPCAgent::NPCAgent(std::shared_ptr<NAI::Goap::IGoapPlanner> goapPlanner,
 	std::vector<std::shared_ptr<NAI::Goap::IGoal>>& goals,
 	std::vector<std::shared_ptr<NAI::Goap::IPredicate>>& predicates,
-	std::shared_ptr<IAgentAIController> controller) : 
+	TWeakObjectPtr<IAgentAIController> controller) :
 	NAI::Goap::BaseAgent(goapPlanner, goals, predicates),
 	mController(controller)
 {
@@ -18,9 +18,9 @@ void NPCAgent::Update(float elapsedTime)
 
 glm::vec3 NPCAgent::GetPosition() const
 {
-	if(auto controller = mController.lock())
+	if(mController.IsValid())
 	{
-		auto position = controller->GetPosition();
+		auto position = mController->GetPosition();
 
 		return glm::vec3(position.X, position.Y, position.Z);
 	}
@@ -32,9 +32,9 @@ glm::vec3 NPCAgent::GetPosition() const
 
 void NPCAgent::MoveTo(float elapsedTime, const glm::vec3& point)
 {
-	if (auto controller = mController.lock())
+	if (mController.IsValid())
 	{
-		return controller->MoveTo(elapsedTime, FVector(point.x, point.y, point.z));
+		return mController->MoveTo(elapsedTime, FVector(point.x, point.y, point.z));
 	}
 	else
 	{

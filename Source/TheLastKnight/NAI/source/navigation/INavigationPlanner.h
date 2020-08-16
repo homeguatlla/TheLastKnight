@@ -1,8 +1,9 @@
 #pragma once
-#include <TheLastKnight/NAI/glm/glm.hpp>
+
 #include <vector>
 #include <memory>
 #include <functional>
+#include <TheLastKnight/NAI/glm/glm.hpp>
 
 namespace NAI
 {

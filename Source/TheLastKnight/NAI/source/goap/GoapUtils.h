@@ -36,10 +36,7 @@ namespace NAI
 				substraction = v1;
 				for (auto&& predicate : v2)
 				{
-					auto it = std::remove_if(substraction.begin(), substraction.end(), 
-						[predicate](std::shared_ptr<IPredicate> p) { 
-							return p->GetID() == predicate->GetID(); 
-						});
+					auto it = std::remove_if(substraction.begin(), substraction.end(), [predicate](std::shared_ptr<IPredicate> p) { return p->GetID() == predicate->GetID(); });
 					if(it!= substraction.end())
 					{
 						substraction.erase(it);
