@@ -7,6 +7,8 @@
 #include <TheLastKnight/NAI/source/goap/predicates/GoToPredicate.h>
 #include <TheLastKnight/Agents/AgentBuilder.h>
 #include <TheLastKnight/NAI/source/goap/planners/TreeGoapPlanner.h>
+#include "GameFramework/Character.h"
+#include "Runtime/AIModule/Classes/Blueprint/AIBlueprintHelperLibrary.h"
 
 void ANPCAIController::BeginPlay()
 {
@@ -28,12 +30,22 @@ void ANPCAIController::Tick(float DeltaTime)
 
 FVector ANPCAIController::GetPosition() const
 {
-	return this->GetPosition();
+	ACharacter* character = GetCharacter();
+	return character->GetActorLocation();
 }
 
 void ANPCAIController::MoveTo(float elapsedTime, const FVector& point)
 {
-	MoveTo(elapsedTime, point);
+	if(point != mLastPoint || mLastPoint == FVector::ZeroVector)
+	{
+		mLastPoint = point;
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, point);
+	}
+}
+
+void ANPCAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)
+{
+	Super::OnMoveCompleted(RequestID, Result);
 }
 
 void ANPCAIController::CreateNavigationPlanner()
@@ -46,10 +58,10 @@ void ANPCAIController::CreateAgent()
 	AgentBuilder builder;
 
 	auto goToGoal = std::make_shared<NAI::Goap::GoToGoal>(mNavigationPlanner);
-	auto predicate = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "Saloon");
+	auto predicate = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "SheriffOffice");
 
 	mAgent = builder.AddGoapPlanner(std::make_shared<NAI::Goap::TreeGoapPlanner>())
-					.AddController(TWeakObjectPtr<ANPCAIController>(this))
+					.AddController(this)
 					.AddGoal(goToGoal)
 					.AddPredicate(predicate)
 					.Build<NPCAgent>();

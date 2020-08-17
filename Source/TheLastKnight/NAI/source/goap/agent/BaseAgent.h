@@ -2,11 +2,11 @@
 #include "IAgent.h"
 #include "AgentContext.h"
 #include <TheLastKnight/NAI/source/goap/GoapTypes.h>
-#include <TheLastKnight/NAI/source/utils/fsm/StatesMachine.h>
 #include <TheLastKnight/NAI/source/goap/agent/fsm/states/Planning.h>
 #include <TheLastKnight/NAI/source/goap/agent/fsm/states/Processing.h>
 #include <TheLastKnight/NAI/source/goap/agent/fsm/transitions/EnterPlanning.h>
 #include <TheLastKnight/NAI/source/goap/agent/fsm/transitions/EnterProcessing.h>
+#include <TheLastKnight/utils/fsm/StatesMachine.h>
 #include <vector>
 #include <memory>
 

@@ -11,7 +11,7 @@ public:
 	NPCAgent(std::shared_ptr<NAI::Goap::IGoapPlanner> goapPlanner,
 		std::vector<std::shared_ptr<NAI::Goap::IGoal>>& goals,
 		std::vector<std::shared_ptr<NAI::Goap::IPredicate>>& predicates, 
-		TWeakObjectPtr<IAgentAIController> controller);
+		IAgentAIController* controller);
 	~NPCAgent() = default;
 
 	void Update(float elapsedTime) override;
@@ -19,5 +19,5 @@ public:
 	void MoveTo(float elapsedTime, const glm::vec3& point) override;
 
 private:
-	TWeakObjectPtr<IAgentAIController> mController;
+	IAgentAIController* mController;
 };

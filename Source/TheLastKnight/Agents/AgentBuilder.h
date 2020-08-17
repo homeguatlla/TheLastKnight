@@ -20,7 +20,7 @@ public:
 	AgentBuilder& AddGoapPlanner(std::shared_ptr<NAI::Goap::IGoapPlanner> goapPlanner);
 	AgentBuilder& AddGoal(std::shared_ptr<NAI::Goap::IGoal> goal);
 	AgentBuilder& AddPredicate(std::shared_ptr<NAI::Goap::IPredicate> predicate);
-	AgentBuilder& AddController(TWeakObjectPtr<IAgentAIController> controller);
+	AgentBuilder& AddController(IAgentAIController* controller);
 
 	template<class TAgent>
 	std::shared_ptr<NAI::Goap::IAgent> Build()
@@ -33,5 +33,5 @@ private:
 	std::shared_ptr<NAI::Goap::IGoapPlanner> mGoapPlanner;
 	std::vector<std::shared_ptr<NAI::Goap::IGoal>> mGoals;
 	std::vector<std::shared_ptr<NAI::Goap::IPredicate>> mPredicates;
-	TWeakObjectPtr<IAgentAIController> mController;
+	IAgentAIController* mController;
 };

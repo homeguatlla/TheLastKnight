@@ -2,6 +2,7 @@
 #include "FollowPathAction.h"
 #include <TheLastKnight/NAI/source/goap/agent/IAgent.h>
 #include <TheLastKnight/NAI/source/navigation/INavigationPath.h>
+#include <TheLastKnight/TheLastKnightGameMode.h>
 
 namespace NAI
 {
@@ -24,7 +25,8 @@ namespace NAI
 		{
 			if (auto agent = mAgent.lock())
 			{
-				auto hasReachedPoint = mPath->HasReachedPoint(mCurrentPointIndex, agent->GetPosition(), 0.1f);
+				//TODO 100 son 1m ponerlo en una cte
+				auto hasReachedPoint = mPath->HasReachedPoint(mCurrentPointIndex, agent->GetPosition(), NavigationPointsPrecision);
 				if (hasReachedPoint)
 				{
 					if(mPath->IsEndOfPath(mCurrentPointIndex))

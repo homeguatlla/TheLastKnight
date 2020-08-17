@@ -29,5 +29,6 @@ private:
 private:
 	UPROPERTY()
 	TArray<AActor*> mWayPoints;
+	UWorld* mWorld;
 	std::map<std::string, glm::vec3> mLocations;
 };

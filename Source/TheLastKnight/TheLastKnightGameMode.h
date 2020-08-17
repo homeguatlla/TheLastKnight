@@ -7,6 +7,8 @@
 #include <TheLastKnight/EventDispatcher.h>
 #include "TheLastKnightGameMode.generated.h"
 
+const float NavigationPointsPrecision = 100.0f;
+
 UCLASS(minimalapi)
 class ATheLastKnightGameMode : public AGameModeBase
 {
