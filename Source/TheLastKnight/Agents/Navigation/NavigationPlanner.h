@@ -15,6 +15,15 @@ namespace NAI {
 
 class NavigationPlanner : public NAI::Navigation::INavigationPlanner
 {
+	struct Location
+	{
+		std::string name;
+		AActor* wayPoint;
+		
+		Location() = default;
+		Location(const std::string& locationName, AActor* locationWayPoint) : name { locationName }, wayPoint { locationWayPoint } {}
+	};
+
 public:
 	NavigationPlanner(UWorld* world);
 	~NavigationPlanner() = default;
@@ -24,11 +33,13 @@ public:
 	unsigned int GetAproxCost(const glm::vec3& origin, const glm::vec3& destination) const override;
 
 private:
-	void CreateLocations();
+	void FindLocations();
+	void CalculateCostMatrix();
+	std::string GetLocationNameGivenAWayPoint(AActor* wayPoint) const;
+	Location FindLocationNearest(const glm::vec3& point) const;
 
 private:
-	UPROPERTY()
-	TArray<AActor*> mWayPoints;
+	std::vector<Location> mLocations;
+	std::map<std::pair<std::string, std::string>, unsigned int> mCostMatrix;
 	UWorld* mWorld;
-	std::map<std::string, glm::vec3> mLocations;
 };

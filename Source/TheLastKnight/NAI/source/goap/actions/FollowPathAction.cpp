@@ -25,7 +25,6 @@ namespace NAI
 		{
 			if (auto agent = mAgent.lock())
 			{
-				//TODO 100 son 1m ponerlo en una cte
 				auto hasReachedPoint = mPath->HasReachedPoint(mCurrentPointIndex, agent->GetPosition(), NavigationPointsPrecision);
 				if (hasReachedPoint)
 				{

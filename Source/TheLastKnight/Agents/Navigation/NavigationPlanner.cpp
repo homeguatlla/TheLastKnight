@@ -7,25 +7,24 @@
 #include "Runtime/NavigationSystem/Public/NavigationSystem.h"
 #include "Runtime/NavigationSystem/Public/NavigationPath.h"
 
+#include <algorithm>
 #include <sstream>
 
 NavigationPlanner::NavigationPlanner(UWorld* world) : mWorld(world)
 {
-	UGameplayStatics::GetAllActorsOfClass(mWorld, ATargetPoint::StaticClass(), mWayPoints);
-
-	CreateLocations();
+	FindLocations();
+	CalculateCostMatrix();	
 }
 
-void NavigationPlanner::CreateLocations()
+void NavigationPlanner::FindLocations()
 {
-	for (auto wayPoint : mWayPoints)
+	TArray<AActor*> wayPoints;
+	UGameplayStatics::GetAllActorsOfClass(mWorld, ATargetPoint::StaticClass(), wayPoints);
+
+	for (auto i = 0; i < wayPoints.Num(); ++i)
 	{
-		auto location = wayPoint->GetActorLocation();
-		FString locationName = wayPoint->GetName();
-		int32 index;
-		locationName.FindChar('_', index);
-		std::string name = std::string(TCHAR_TO_UTF8(*locationName.Left(index)));
-		mLocations.insert(std::make_pair(name, glm::vec3(location.X, location.Y, location.Z)));
+		auto locationName = GetLocationNameGivenAWayPoint(wayPoints[i]);
+		mLocations.push_back(Location(locationName, wayPoints[i]));
 	}
 }
 
@@ -56,10 +55,15 @@ std::function<void(std::shared_ptr<NAI::Navigation::INavigationPath>) > callback
 
 glm::vec3 NavigationPlanner::GetLocationGivenAName(const std::string& locationName) const
 {
-	auto it = mLocations.find(locationName);
+	auto it = std::find_if(mLocations.begin(), mLocations.end(), 
+		[&locationName](const Location& location){
+			return location.name == locationName;
+		});
+
 	if (it != mLocations.end())
 	{
-		return it->second;
+		FVector point = it->wayPoint->GetActorLocation();
+		return glm::vec3(point.X, point.Y, point.Z);
 	}
 	else
 	{	
@@ -71,6 +75,68 @@ glm::vec3 NavigationPlanner::GetLocationGivenAName(const std::string& locationNa
 
 unsigned int NavigationPlanner::GetAproxCost(const glm::vec3& origin, const glm::vec3& destination) const
 {
-	//TODO given both points find the nearest locations and find the cost.
+	auto location1 = FindLocationNearest(origin);
+	auto location2 = FindLocationNearest(destination);
+
+	if (location1.name != location2.name)
+	{
+		auto key = std::pair<std::string, std::string>(location1.name, location2.name);
+		auto it = mCostMatrix.find(key);
+		if(it != mCostMatrix.end())
+		{
+			return it->second;
+		}
+		else 
+		{
+			return std::numeric_limits<unsigned int>::max();
+		}
+	}
+
 	return 0;
+}
+
+std::string NavigationPlanner::GetLocationNameGivenAWayPoint(AActor* wayPoint) const
+{
+	FString locationName = wayPoint->GetName();
+	int32 index;
+	locationName.FindChar('_', index);
+	return std::string(TCHAR_TO_UTF8(*locationName.Left(index)));
+}
+
+NavigationPlanner::Location NavigationPlanner::FindLocationNearest(const glm::vec3& point) const
+{
+	float minDistance = std::numeric_limits<float>::max();
+	NavigationPlanner::Location nearestLocation;
+
+	for (auto location : mLocations)
+	{
+		FVector locationPoint = location.wayPoint->GetActorLocation();
+		auto distance = glm::distance(point, glm::vec3(locationPoint.X, locationPoint.Y, locationPoint.Z));
+		if (distance < minDistance)
+		{
+			nearestLocation = location;
+			minDistance = distance;
+		}
+	}
+
+	return nearestLocation;
+}
+
+void NavigationPlanner::CalculateCostMatrix()
+{
+	auto currentNavigationSystem = UNavigationSystemV1::GetCurrent(mWorld);
+
+	for (auto i = 0; i < mLocations.size() - 1; ++i)
+	{
+		for (auto j = i + 1; j < mLocations.size(); ++j)
+		{
+			auto path = currentNavigationSystem->FindPathToLocationSynchronously(
+				mWorld,
+				mLocations[i].wayPoint->GetActorLocation(),
+				mLocations[j].wayPoint->GetActorLocation()
+				);
+			mCostMatrix.insert(std::make_pair(std::make_pair(mLocations[i].name, mLocations[j].name), path->GetPathCost()));
+			mCostMatrix.insert(std::make_pair(std::make_pair(mLocations[j].name, mLocations[i].name), path->GetPathCost()));
+		}
+	}
 }
