@@ -25,12 +25,14 @@ namespace NAI
 			bool SatisfyActions(std::vector<std::shared_ptr<IPredicate>>& inputPredicates) override;
 			void Accomplished(std::vector<std::shared_ptr<IPredicate>>& predicates) final override;
 			void Cancel() final override;
+			void Reset() final override;
 			std::vector<std::shared_ptr<IPredicate>> GetPredicatesCanBeAccomplished(std::vector<std::shared_ptr<IPredicate>> desiredPredicates) override;
 			std::vector<std::shared_ptr<IPredicate>> GetPredicatesSatisfyPreconditions(std::vector<std::shared_ptr<IPredicate>> inputPredicates) override;
 		protected:
 			virtual void DoCreate(std::shared_ptr<IAgent> agent) {}
 			virtual void DoAccomplished(std::vector<std::shared_ptr<IPredicate>>& predicates) {};
 			virtual void DoCancel() {};
+			virtual void DoReset() {};
 
 		private:
 			void CalculateCost();

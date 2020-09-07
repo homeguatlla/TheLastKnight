@@ -58,12 +58,14 @@ void ANPCAIController::CreateAgent()
 	AgentBuilder builder;
 
 	auto goToGoal = std::make_shared<NAI::Goap::GoToGoal>(mNavigationPlanner);
-	auto predicate = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "SheriffOffice");
+	auto predicate1 = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "SheriffOffice");
+	auto predicate2 = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "Saloon");
 
 	mAgent = builder.AddGoapPlanner(std::make_shared<NAI::Goap::TreeGoapPlanner>())
 					.AddController(this)
 					.AddGoal(goToGoal)
-					.AddPredicate(predicate)
+					.AddPredicate(predicate1)
+					.AddPredicate(predicate2)
 					.Build<NPCAgent>();
 
 	mAgent->StartUp();

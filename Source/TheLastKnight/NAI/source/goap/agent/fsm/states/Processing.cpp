@@ -47,7 +47,11 @@ namespace NAI
 
 		void Processing::OnExit(float deltaTime)
 		{
-			
+			auto plan = GetContext()->GetPlan();
+			if (plan)
+			{
+				plan->Reset();
+			}
 		}
 
 		void Processing::OnPredicatesListChanged()
@@ -63,6 +67,7 @@ namespace NAI
 				auto newPredicates = GetContext()->GetPredicates();
 				plan->Accomplished(newPredicates);
 				GetContext()->SetPredicates(newPredicates);
+				plan->Reset();
 			}
 			GetContext()->SetPlan(nullptr);
 		}

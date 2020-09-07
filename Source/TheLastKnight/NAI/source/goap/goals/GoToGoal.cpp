@@ -23,6 +23,11 @@ namespace NAI
 		void GoToGoal::DoCreate(std::shared_ptr<IAgent> agent)
 		{
 			mAgent = agent;
+			Reset();
+		}
+
+		void GoToGoal::DoReset()
+		{
 			mActions.push_back(CreateFindPathToAction(mAgent, mNavigationPlanner));
 		}
 
@@ -46,6 +51,16 @@ namespace NAI
 		{
 			RemovePredicateGoTo(predicates);
 			Utils::RemovePredicateWith(predicates, "GotPath");
+
+			std::shared_ptr<IPredicate> predicate;
+			if (Utils::FindPredicateWith(predicates, "PlaceIam", predicate))
+			{
+				auto placeIamPredicate = std::static_pointer_cast<PlaceIamPredicate>(predicate);
+				if (placeIamPredicate->GetPlaceName() != mPlaceName)
+				{
+					Utils::RemovePredicateWith(predicates, "PlaceIam");
+				}
+			}
 		}
 
 		void GoToGoal::RemovePredicateGoTo(std::vector<std::shared_ptr<IPredicate>>& predicates)

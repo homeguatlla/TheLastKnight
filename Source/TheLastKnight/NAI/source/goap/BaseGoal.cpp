@@ -100,6 +100,14 @@ namespace NAI
 			DoCancel();
 		}
 
+		void BaseGoal::Reset()
+		{
+			mActions.clear();
+			mCurrentActionIndex = 0;
+
+			DoReset();
+		}
+
 		std::vector<std::shared_ptr<IPredicate>> BaseGoal::GetPredicatesCanBeAccomplished(
 			std::vector<std::shared_ptr<IPredicate>> desiredPredicates)
 		{
