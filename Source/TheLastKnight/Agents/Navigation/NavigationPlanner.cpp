@@ -7,6 +7,8 @@
 #include "Runtime/NavigationSystem/Public/NavigationSystem.h"
 #include "Runtime/NavigationSystem/Public/NavigationPath.h"
 
+#include "NavFilters/NavigationQueryFilter.h"
+
 #include <algorithm>
 #include <sstream>
 
@@ -28,29 +30,47 @@ void NavigationPlanner::FindLocations()
 	}
 }
 
-void NavigationPlanner::GetPathFromTo(
-const glm::vec3& origin, 
-const glm::vec3& destination, 
-std::function<void(std::shared_ptr<NAI::Navigation::INavigationPath>) > callback) const
+void NavigationPlanner::GetPathFromTo(const glm::vec3& origin, const glm::vec3& destination, PathFromToCallback callback)
 {
+	mPathFromToCallback = callback;
 	auto currentNavigationSystem = UNavigationSystemV1::GetCurrent(mWorld);
-	auto path = currentNavigationSystem->FindPathToLocationSynchronously(
-		mWorld, 
-		FVector(origin.x, origin.y, origin.z), 
-		FVector(destination.x, destination.y, destination.z));
 
-	if (path != NULL)
+	//TODO the navAgentProperties need to be get from character not hardcoded.
+	FNavAgentProperties navAgentProperties;
+	navAgentProperties.AgentHeight = 100;
+	navAgentProperties.AgentRadius = 10;
+	navAgentProperties.bCanWalk = true;
+	navAgentProperties.bCanFly = false;
+
+	FPathFindingQuery navParams;
+	navParams.EndLocation = FVector(destination.x, destination.y, destination.z);
+	navParams.StartLocation = FVector(origin.x, origin.y, origin.z);
+	ANavigationData* navData = currentNavigationSystem->MainNavData;
+	navParams.QueryFilter = UNavigationQueryFilter::GetQueryFilter<UNavigationQueryFilter>(*navData);
+	navParams.NavData = navData;
+
+	FNavPathQueryDelegate del;
+	del.BindRaw(this, &NavigationPlanner::OnPathFound);
+
+	currentNavigationSystem->FindPathAsync(navAgentProperties, navParams, del, EPathFindingMode::Regular);
+}
+
+std::shared_ptr<NAI::Navigation::INavigationPath> NavigationPlanner::CreateNavigationPath(TArray<FNavPathPoint>& pathPoints)
+{
+	auto navigationPath = std::make_shared<NavigationPath>();
+	for (auto point : pathPoints)
 	{
-		auto navigationPath = std::make_shared<NavigationPath>();
-		for (auto i = 0; i < path->PathPoints.Num(); ++i)
-		{
-			//DrawDebugSphere(mWorld, path->PathPoints[i], 10.0f, 12, FColor(255, 0, 0));
-			auto point = path->PathPoints[i];
-			navigationPath->AddPoint(glm::vec3(point.X, point.Y, point.Z));
-		}
-
-		callback(navigationPath);
+		//DrawDebugSphere(mWorld, path->PathPoints[i], 10.0f, 12, FColor(255, 0, 0));
+		navigationPath->AddPoint(glm::vec3(point.Location.X, point.Location.Y, point.Location.Z));
 	}
+
+	return navigationPath;
+}
+
+void NavigationPlanner::OnPathFound(uint32 aPathId, ENavigationQueryResult::Type aResultType, FNavPathSharedPtr aNavPointer)
+{
+	auto navigationPath = CreateNavigationPath(aNavPointer->GetPathPoints());
+	mPathFromToCallback(navigationPath);
 }
 
 glm::vec3 NavigationPlanner::GetLocationGivenAName(const std::string& locationName) const

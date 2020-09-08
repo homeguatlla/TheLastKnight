@@ -5,6 +5,7 @@
 #include <memory>
 #include <map>
 #include <string>
+#include "AI/Navigation/NavigationTypes.h"
 
 namespace NAI {
 	namespace Navigation
@@ -28,7 +29,7 @@ public:
 	NavigationPlanner(UWorld* world);
 	~NavigationPlanner() = default;
 
-	void GetPathFromTo(const glm::vec3& origin, const glm::vec3& destination, std::function<void(std::shared_ptr<NAI::Navigation::INavigationPath>) > callback) const override;
+	void GetPathFromTo(const glm::vec3& origin, const glm::vec3& destination, PathFromToCallback callback) override;
 	glm::vec3 GetLocationGivenAName(const std::string& locationName) const override;
 	unsigned int GetAproxCost(const glm::vec3& origin, const glm::vec3& destination) const override;
 
@@ -37,9 +38,12 @@ private:
 	void CalculateCostMatrix();
 	std::string GetLocationNameGivenAWayPoint(AActor* wayPoint) const;
 	Location FindLocationNearest(const glm::vec3& point) const;
+	void OnPathFound(uint32 aPathId, ENavigationQueryResult::Type aResultType, FNavPathSharedPtr aNavPointer);
+	std::shared_ptr<NAI::Navigation::INavigationPath> CreateNavigationPath(TArray<FNavPathPoint>& pathPoints);
 
 private:
 	std::vector<Location> mLocations;
 	std::map<std::pair<std::string, std::string>, unsigned int> mCostMatrix;
+	PathFromToCallback mPathFromToCallback;
 	UWorld* mWorld;
 };

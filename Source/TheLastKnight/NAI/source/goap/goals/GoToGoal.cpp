@@ -49,9 +49,6 @@ namespace NAI
 
 		void GoToGoal::DoAccomplished(std::vector<std::shared_ptr<IPredicate>>& predicates)
 		{
-			RemovePredicateGoTo(predicates);
-			Utils::RemovePredicateWith(predicates, "GotPath");
-
 			std::shared_ptr<IPredicate> predicate;
 			if (Utils::FindPredicateWith(predicates, "PlaceIam", predicate))
 			{
@@ -61,6 +58,9 @@ namespace NAI
 					Utils::RemovePredicateWith(predicates, "PlaceIam");
 				}
 			}
+
+			RemovePredicateGoTo(predicates);
+			Utils::RemovePredicateWith(predicates, "GotPath");
 		}
 
 		void GoToGoal::RemovePredicateGoTo(std::vector<std::shared_ptr<IPredicate>>& predicates)
@@ -95,6 +95,7 @@ namespace NAI
 		{
 			if(!path->Empty())
 			{				
+				mPlaceName = placeName;
 				mActions.push_back(CreateFollowPathAction(mAgent, placeName, path));
 			}
 			else
