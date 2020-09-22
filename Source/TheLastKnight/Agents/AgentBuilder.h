@@ -13,6 +13,8 @@ namespace NAI {
 	}
 }
 
+class NPCAgentDecorator;
+
 class AgentBuilder
 {
 public:
@@ -25,7 +27,13 @@ public:
 	template<class TAgent>
 	std::shared_ptr<NAI::Goap::IAgent> Build()
 	{
-		return std::make_shared<TAgent>(mGoapPlanner, mGoals, mPredicates, mController);
+		auto agent = std::make_shared<TAgent>(mGoapPlanner, mGoals, mPredicates, mController);
+
+#ifdef _DEBUG
+		agent = std::make_shared<NPCAgentDecorator>(agent);
+#endif
+
+		return agent;
 	}
 	
 private:
