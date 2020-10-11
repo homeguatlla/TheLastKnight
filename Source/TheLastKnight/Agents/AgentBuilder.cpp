@@ -23,3 +23,9 @@ AgentBuilder& AgentBuilder::AddController(IAgentAIController* controller)
 	mController = controller;
 	return *this;
 }
+
+AgentBuilder& AgentBuilder::AddEventDispatcher(AEventDispatcher* eventDispatcher)
+{
+	mEventDispatcher = eventDispatcher;
+	return *this;
+}

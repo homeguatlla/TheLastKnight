@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+/*
 #include <TheLastKnight/Character/HUD/CharacterHUD.h>
 #include <TheLastKnight/TheLastKnightGameMode.h>
 #include <TheLastKnight/Character/HUD/IHealthHUD.h>
@@ -84,4 +84,4 @@ void ACharacterHUD::OnNotifyReadyToCastReceived(const FString& name)
 	{
 		IAbilityBaseHUD::Execute_OnNotifyReadyToCast(mAbilitiesToolBeltHUDWidget, name);
 	}
-}
+}*/

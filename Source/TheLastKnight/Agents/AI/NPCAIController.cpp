@@ -7,6 +7,7 @@
 #include <TheLastKnight/NAI/source/goap/predicates/GoToPredicate.h>
 #include <TheLastKnight/Agents/AgentBuilder.h>
 #include <TheLastKnight/NAI/source/goap/planners/TreeGoapPlanner.h>
+#include <TheLastKnight/TheLastKnightGameMode.h>
 #include "GameFramework/Character.h"
 #include "Runtime/AIModule/Classes/Blueprint/AIBlueprintHelperLibrary.h"
 
@@ -60,13 +61,19 @@ void ANPCAIController::CreateAgent()
 	auto goToGoal = std::make_shared<NAI::Goap::GoToGoal>(mNavigationPlanner);
 	auto predicate1 = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "SheriffOffice");
 	auto predicate2 = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "Saloon");
+	auto gameMode = GetWorld()->GetAuthGameMode<ATheLastKnightGameMode>();
+	
+	if (gameMode->IsValidLowLevel())
+	{
+		auto eventDispatcher = gameMode->GetEventDispatcher();
+		mAgent = builder.AddGoapPlanner(std::make_shared<NAI::Goap::TreeGoapPlanner>())
+						.AddController(this)
+						.AddGoal(goToGoal)
+						.AddPredicate(predicate1)
+						.AddPredicate(predicate2)
+						.AddEventDispatcher(eventDispatcher)
+						.Build<NPCAgent>();
 
-	mAgent = builder.AddGoapPlanner(std::make_shared<NAI::Goap::TreeGoapPlanner>())
-					.AddController(this)
-					.AddGoal(goToGoal)
-					.AddPredicate(predicate1)
-					.AddPredicate(predicate2)
-					.Build<NPCAgent>();
-
-	mAgent->StartUp();
+		mAgent->StartUp();
+	}
 }

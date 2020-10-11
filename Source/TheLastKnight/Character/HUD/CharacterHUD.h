@@ -11,8 +11,9 @@
 /**
  * Basic character HUD
  */
+ /*
 UCLASS()
-class THELASTKNIGHT_API ACharacterHUD : public AHUD
+class THELASTKNIGHT_API ACharacterHUD
 {
 	GENERATED_BODY()
 
@@ -83,10 +84,10 @@ private:
 	}
 
 public:
-	/** Blueprint class which displays the ability */
+	// Blueprint class which displays the ability
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	TSubclassOf<UUserWidget> HUDWidgetClass;
-	/** Blueprint class which displays the ability */
+	// Blueprint class which displays the ability
 	UPROPERTY(EditAnywhere, Category = "Tool Belt")
 	TSubclassOf<UUserWidget> AbilitiesToolBeltHUDWidgetClass;
 
@@ -99,3 +100,4 @@ public:
 	//esto hay que arreglarlo
 	int mHudIndex;
 };
+*/

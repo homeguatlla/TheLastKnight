@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <TheLastKnight/Agents/AI/NPCAgentDebugDecorator.h>
 
 class IAgentAIController;
+class AEventDispatcher;
 
 namespace NAI {
 	namespace Goap {
@@ -23,17 +25,16 @@ public:
 	AgentBuilder& AddGoal(std::shared_ptr<NAI::Goap::IGoal> goal);
 	AgentBuilder& AddPredicate(std::shared_ptr<NAI::Goap::IPredicate> predicate);
 	AgentBuilder& AddController(IAgentAIController* controller);
+	AgentBuilder& AddEventDispatcher(AEventDispatcher* eventDispatcher);
 
 	template<class TAgent>
 	std::shared_ptr<NAI::Goap::IAgent> Build()
 	{
 		auto agent = std::make_shared<TAgent>(mGoapPlanner, mGoals, mPredicates, mController);
+		auto debugAgent = std::make_shared<NPCAgentDebugDecorator>(agent, mEventDispatcher);
 
-#ifdef _DEBUG
-		agent = std::make_shared<NPCAgentDecorator>(agent);
-#endif
-
-		return agent;
+		return debugAgent;
+		//return agent;
 	}
 	
 private:
@@ -42,4 +43,5 @@ private:
 	std::vector<std::shared_ptr<NAI::Goap::IGoal>> mGoals;
 	std::vector<std::shared_ptr<NAI::Goap::IPredicate>> mPredicates;
 	IAgentAIController* mController;
+	AEventDispatcher* mEventDispatcher;
 };

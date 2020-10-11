@@ -14,11 +14,11 @@ ATheLastKnightGameMode::ATheLastKnightGameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
-	// set default HUD class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<AHUD> CharacterHUDBPClass(TEXT("/Game/TheLastKnight/Blueprints/Character/HUD/BP_CharacterHUD"));
-	if (CharacterHUDBPClass.Class != NULL)
+	// set default HUD class to our Blueprinted
+	static ConstructorHelpers::FClassFinder<AHUD> MainHUDBPClass(TEXT("/Game/TheLastKnight/Blueprints/HUD/BP_MainHUD"));
+	if (MainHUDBPClass.Class != NULL)
 	{
-		HUDClass = CharacterHUDBPClass.Class;
+		HUDClass = MainHUDBPClass.Class;
 	}
 }
 

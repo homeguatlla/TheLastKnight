@@ -1,7 +1,7 @@
 #include <TheLastKnight/Character/AbilitiesToolBelt.h>
 #include <TheLastKnight/EventDispatcher.h>
 #include <TheLastKnight/Abilities/Ability.h>
-#include <TheLastKnight//TheLastKnightGameMode.h>
+#include <TheLastKnight/TheLastKnightGameMode.h>
 #include <algorithm>
 
 

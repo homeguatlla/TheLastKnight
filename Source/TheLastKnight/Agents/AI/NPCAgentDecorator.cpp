@@ -20,3 +20,33 @@ void NPCAgentDecorator::MoveTo(float elapsedTime, const glm::vec3& point)
 {
 	mAgent->MoveTo(elapsedTime, point);
 }
+
+void NPCAgentDecorator::StartUp()
+{
+	mAgent->StartUp();
+}
+
+NAI::Goap::AgentState NPCAgentDecorator::GetCurrentState() const
+{
+	return mAgent->GetCurrentState();
+}
+
+bool NPCAgentDecorator::HasPredicate(int predicateID) const
+{
+	return mAgent->HasPredicate(predicateID);
+}
+
+std::string NPCAgentDecorator::WhereIam() const
+{
+	return mAgent->WhereIam();
+}
+
+void NPCAgentDecorator::OnNewPredicate(std::shared_ptr<NAI::Goap::IPredicate> predicate)
+{
+	mAgent->OnNewPredicate(predicate);
+}
+
+std::vector<std::shared_ptr<NAI::Goap::IGoal>> NPCAgentDecorator::GetGoals() const
+{
+	return mAgent->GetGoals();
+}
