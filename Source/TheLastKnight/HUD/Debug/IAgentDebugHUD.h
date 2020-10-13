@@ -15,4 +15,6 @@ class IAgentDebugHUD
 public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
 	void OnLogPredicate(const FString& text);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
+	void OnLogClear();
 };

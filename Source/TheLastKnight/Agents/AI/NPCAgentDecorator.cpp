@@ -50,3 +50,8 @@ std::vector<std::shared_ptr<NAI::Goap::IGoal>> NPCAgentDecorator::GetGoals() con
 {
 	return mAgent->GetGoals();
 }
+
+std::vector<std::shared_ptr<NAI::Goap::IPredicate>> NPCAgentDecorator::GetPredicates() const
+{
+	return mAgent->GetPredicates();
+}

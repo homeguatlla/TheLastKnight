@@ -1,24 +1,30 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-/*
+
 #include <TheLastKnight/Character/HUD/CharacterHUD.h>
 #include <TheLastKnight/TheLastKnightGameMode.h>
 #include <TheLastKnight/Character/HUD/IHealthHUD.h>
 #include <TheLastKnight/Character/HUD/Abilities/IAbilityBaseHUD.h>
 #include <Kismet/GameplayStatics.h>
+#include <TheLastKnight/utils/UtilsLibrary.h>
 
-
-ACharacterHUD::ACharacterHUD() : mHudIndex{0}
+ACharacterHUD::ACharacterHUD()
 {
 
 }
 
-void ACharacterHUD::BeginPlay()
+void ACharacterHUD::Initialize(int hudIndex)
 {
-	Super::BeginPlay();
-	
-	mHUDWidget = CreateHUDFromClass<UUserWidget>(HUDWidgetClass);
-	mAbilitiesToolBeltHUDWidget = CreateHUDFromClass<UUserWidget>(AbilitiesToolBeltHUDWidgetClass);
+	mHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
+		hudIndex++, 
+		GetName(),
+		GetOwningPlayerController(), 
+		HUDWidgetClass);
+	mAbilitiesToolBeltHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
+		hudIndex++, 
+		GetName(),
+		GetOwningPlayerController(), 
+		AbilitiesToolBeltHUDWidgetClass);
 
 	BindToDelegate();
 }
@@ -84,4 +90,4 @@ void ACharacterHUD::OnNotifyReadyToCastReceived(const FString& name)
 	{
 		IAbilityBaseHUD::Execute_OnNotifyReadyToCast(mAbilitiesToolBeltHUDWidget, name);
 	}
-}*/
+}

@@ -18,6 +18,7 @@ public:
 	std::string WhereIam() const override;
 	void OnNewPredicate(std::shared_ptr<NAI::Goap::IPredicate> predicate) override;
 	std::vector<std::shared_ptr<NAI::Goap::IGoal>> GetGoals() const override;
+	std::vector<std::shared_ptr<NAI::Goap::IPredicate>> GetPredicates() const override;
 
 protected:
 	std::shared_ptr<NAI::Goap::IAgent> mAgent;

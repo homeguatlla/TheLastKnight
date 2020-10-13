@@ -32,7 +32,8 @@ namespace NAI
 			std::string WhereIam() const override;
 			void OnNewPredicate(std::shared_ptr<IPredicate> predicate) override;
 			std::vector<std::shared_ptr<IGoal>> GetGoals() const override { return mGoals; }
-
+			std::vector<std::shared_ptr<IPredicate>> GetPredicates() const override { return mPredicates;}
+		
 		private:
 			void CreateStatesMachine();
 			void NotifyPredicatesListChangedToProcessState();

@@ -5,6 +5,7 @@
 #include <TheLastKnight/TheLastKnightGameMode.h>
 #include <TheLastKnight/HUD/Debug/IAgentDebugHUD.h>
 #include <Kismet/GameplayStatics.h>
+#include <TheLastKnight/utils/UtilsLibrary.h>
 
 
 AMainHUD::AMainHUD() : mHudIndex{0}
@@ -16,8 +17,16 @@ void AMainHUD::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	mCharacterHUDWidget = CreateHUDFromClass<UUserWidget>(CharacterHUDWidgetClass);
-	mDebugHUDWidget = CreateHUDFromClass<UUserWidget>(DebugHUDWidgetClass);
+	mCharacterHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
+		mHudIndex++,
+		GetName(),
+		GetOwningPlayerController(),
+		CharacterHUDWidgetClass);
+	mDebugHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
+		mHudIndex++,
+		GetName(),
+		GetOwningPlayerController(), 
+		DebugHUDWidgetClass);
 
 	BindToDelegate();
 }
@@ -28,7 +37,8 @@ void AMainHUD::BindToDelegate()
 	if (gameMode)
 	{
 		gameMode->GetEventDispatcher()->OnLogPredicate.AddDynamic(this, &AMainHUD::OnLogPredicate);
-		
+		gameMode->GetEventDispatcher()->OnLogClear.AddDynamic(this, &AMainHUD::OnLogClear);
+
 		/*gameMode->GetEventDispatcher()->OnUpdateHealth.AddDynamic(this, &ACharacterHUD::OnUpdateHealthReceived);
 		gameMode->GetEventDispatcher()->OnAddAbilityIntoToolBelt.AddDynamic(this, &ACharacterHUD::OnAddAbilityIntoToolBeltReceived);
 
@@ -44,5 +54,13 @@ void AMainHUD::OnLogPredicate(const FString& predicate)
 	if (mDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
 	{
 		IAgentDebugHUD::Execute_OnLogPredicate(mDebugHUDWidget, predicate);
+	}
+}
+
+void AMainHUD::OnLogClear()
+{
+	if (mDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
+	{
+		IAgentDebugHUD::Execute_OnLogClear(mDebugHUDWidget);
 	}
 }
