@@ -8,30 +8,42 @@
 #include <Kismet/GameplayStatics.h>
 #include <TheLastKnight/utils/UtilsLibrary.h>
 
+const FString CHARACTER_HUD_NAME("CharacterHUD");
+
 ACharacterHUD::ACharacterHUD()
 {
 
 }
 
-void ACharacterHUD::Initialize(int hudIndex)
+void ACharacterHUD::Initialize(
+	int hudIndex, 
+	APlayerController* playerController, 
+	TArray<TSubclassOf<UUserWidget>> widgetsClasses)
 {
+/*
+	mCharacterHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
+		hudIndex++,
+		CHARACTER_HUD_NAME,
+		playerController,
+		widgetsClasses[0]);*/
+
 	mHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
 		hudIndex++, 
-		GetName(),
-		GetOwningPlayerController(), 
-		HUDWidgetClass);
+		CHARACTER_HUD_NAME,
+		playerController,
+		widgetsClasses[0]);
 	mAbilitiesToolBeltHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
 		hudIndex++, 
-		GetName(),
-		GetOwningPlayerController(), 
-		AbilitiesToolBeltHUDWidgetClass);
+		CHARACTER_HUD_NAME,
+		playerController,
+		widgetsClasses[1]);
 
 	BindToDelegate();
 }
 
 void ACharacterHUD::BindToDelegate()
 {
-	auto gameMode = Cast<ATheLastKnightGameMode>(UGameplayStatics::GetGameMode(GetOwningPawn()->GetWorld()));
+	auto gameMode = Cast<ATheLastKnightGameMode>(UGameplayStatics::GetGameMode(this->GetWorld()));
 	if (gameMode)
 	{
 		gameMode->GetEventDispatcher()->OnUpdateHealth.AddDynamic(this, &ACharacterHUD::OnUpdateHealthReceived);

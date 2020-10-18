@@ -7,6 +7,9 @@
 #include <Blueprint/UserWidget.h>
 #include "MainHUD.generated.h"
 
+
+class ACharacterHUD;
+
 /**
  * Basic Main HUD
  */
@@ -28,11 +31,12 @@ public:
 
 private:
 	void BindToDelegate();
+	void CreateCharacterHUD(TArray<TSubclassOf<UUserWidget>> widgetClasses);
 
 public:
 	/** Blueprint class which displays the ability */
-	UPROPERTY(EditAnywhere, Category = "CharacterHUD")
-	TSubclassOf<UUserWidget> CharacterHUDWidgetClass;
+	UPROPERTY(EditAnywhere, Category = "Character HUD")
+	TArray<TSubclassOf<UUserWidget>> CharacterHUDWidgetClasses;
 
 	/** Blueprint class which displays the ability */
 	UPROPERTY(EditAnywhere, Category = "Debug HUD")
@@ -45,4 +49,6 @@ public:
 	UUserWidget* mDebugHUDWidget;
 
 	int mHudIndex;
+
+	ACharacterHUD* mCharacterHUD;
 };

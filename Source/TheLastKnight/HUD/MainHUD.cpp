@@ -2,33 +2,46 @@
 
 
 #include <TheLastKnight/HUD/MainHUD.h>
-#include <TheLastKnight/TheLastKnightGameMode.h>
 #include <TheLastKnight/HUD/Debug/IAgentDebugHUD.h>
-#include <Kismet/GameplayStatics.h>
-#include <TheLastKnight/utils/UtilsLibrary.h>
 
+#include <TheLastKnight/utils/UtilsLibrary.h>
+#include <TheLastKnight/Character/HUD/CharacterHUD.h>
+#include <TheLastKnight/TheLastKnightGameMode.h>
+
+#include <Kismet/GameplayStatics.h>
 
 AMainHUD::AMainHUD() : mHudIndex{0}
 {
-
+	
 }
 
 void AMainHUD::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	mCharacterHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
-		mHudIndex++,
-		GetName(),
-		GetOwningPlayerController(),
-		CharacterHUDWidgetClass);
 	mDebugHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
 		mHudIndex++,
 		GetName(),
 		GetOwningPlayerController(), 
 		DebugHUDWidgetClass);
 
+	CreateCharacterHUD(CharacterHUDWidgetClasses);
+	
 	BindToDelegate();
+}
+
+void AMainHUD::CreateCharacterHUD(TArray<TSubclassOf<UUserWidget>> widgetClasses)
+{
+	FActorSpawnParameters spawnInfo;
+	spawnInfo.Owner = this;
+	//spawnInfo.Instigator = this;
+	spawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	mCharacterHUD = GetWorld()->SpawnActor<ACharacterHUD>(
+		ACharacterHUD::StaticClass(),
+		FVector::ZeroVector,
+		FRotator::ZeroRotator,
+		spawnInfo);
+	mCharacterHUD->Initialize(mHudIndex, GetOwningPlayerController(), widgetClasses);
 }
 
 void AMainHUD::BindToDelegate()

@@ -29,7 +29,7 @@ void ATheLastKnightGameMode::BeginPlay()
 	FActorSpawnParameters spawnInfo;
 	spawnInfo.Owner = this;
 	//spawnInfo.Instigator = this;
-	spawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	spawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 
 	mEventDispatcher = GetWorld()->SpawnActor<AEventDispatcher>(

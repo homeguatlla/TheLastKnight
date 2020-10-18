@@ -11,16 +11,16 @@
 /**
  * Basic character HUD
  */
- 
+
 UCLASS()
-class THELASTKNIGHT_API ACharacterHUD : public AHUD
+class THELASTKNIGHT_API ACharacterHUD : public AActor
 {
 	GENERATED_BODY()
 
 public:
 	ACharacterHUD();
 
-	void Initialize(int hudIndex);
+	void Initialize(int hudIndex, APlayerController* playerController, TArray<TSubclassOf<UUserWidget>> CharacterHUDWidgetClasses);
 	
 	UFUNCTION()
 	void OnUpdateHealthReceived(float health);
@@ -58,12 +58,8 @@ private:
 	void BindToDelegate();
 
 public:
-	// Blueprint class which displays the ability
-	UPROPERTY(EditAnywhere, Category = "HUD")
-	TSubclassOf<UUserWidget> HUDWidgetClass;
-	// Blueprint class which displays the ability
-	UPROPERTY(EditAnywhere, Category = "Tool Belt")
-	TSubclassOf<UUserWidget> AbilitiesToolBeltHUDWidgetClass;
+	UPROPERTY()
+	UUserWidget* mCharacterHUDWidget;
 
 	UPROPERTY()
 	UUserWidget* mHUDWidget;
