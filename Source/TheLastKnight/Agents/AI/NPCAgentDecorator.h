@@ -19,7 +19,10 @@ public:
 	void OnNewPredicate(std::shared_ptr<NAI::Goap::IPredicate> predicate) override;
 	std::vector<std::shared_ptr<NAI::Goap::IGoal>> GetGoals() const override;
 	std::vector<std::shared_ptr<NAI::Goap::IPredicate>> GetPredicates() const override;
+	bool IsEnbled() const { return mIsEnabled; }
+	void SetEnabled(bool enabled) { mIsEnabled = enabled; }
 
 protected:
 	std::shared_ptr<NAI::Goap::IAgent> mAgent;
+	bool mIsEnabled;
 };

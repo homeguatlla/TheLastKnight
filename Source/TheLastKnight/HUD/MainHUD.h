@@ -24,7 +24,7 @@ public:
 	void BeginPlay() override;
 
 	UFUNCTION()
-	void OnLogPredicate(const FString& predicate);
+	void OnLogPredicate(const ANPCAIController* controller, const FString& predicate);
 	
 	UFUNCTION()
 	void OnLogClear();

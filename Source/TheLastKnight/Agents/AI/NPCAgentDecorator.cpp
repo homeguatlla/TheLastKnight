@@ -1,9 +1,10 @@
 #include "NPCAgentDecorator.h"
 
 
-NPCAgentDecorator::NPCAgentDecorator(std::shared_ptr<NAI::Goap::IAgent> agent) : mAgent{ agent }
+NPCAgentDecorator::NPCAgentDecorator(std::shared_ptr<NAI::Goap::IAgent> agent) : 
+mAgent{ agent },
+mIsEnabled {true}
 {
-
 }
 
 void NPCAgentDecorator::Update(float elapsedTime)

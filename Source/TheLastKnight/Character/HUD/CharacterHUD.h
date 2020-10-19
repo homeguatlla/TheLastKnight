@@ -59,9 +59,6 @@ private:
 
 public:
 	UPROPERTY()
-	UUserWidget* mCharacterHUDWidget;
-
-	UPROPERTY()
 	UUserWidget* mHUDWidget;
 
 	UPROPERTY()

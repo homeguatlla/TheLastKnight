@@ -18,7 +18,7 @@ AgentBuilder& AgentBuilder::AddPredicate(std::shared_ptr<NAI::Goap::IPredicate> 
 	return *this;
 }
 
-AgentBuilder& AgentBuilder::AddController(IAgentAIController* controller)
+AgentBuilder& AgentBuilder::AddController(ANPCAIController* controller)
 {
 	mController = controller;
 	return *this;

@@ -24,11 +24,11 @@ class THELASTKNIGHT_API ANPCAIController : public AAIController, public IAgentAI
 		void MoveTo(float elapsedTime, const FVector& point) override;
 		void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
 
-private:
+	private:
 		void CreateAgent();
 		void CreateNavigationPlanner();
-	private:
 
+	private:
 		std::shared_ptr<NAI::Goap::IAgent> mAgent;
 		std::shared_ptr<NavigationPlanner> mNavigationPlanner;
 		FVector mLastPoint { FVector::ZeroVector} ;

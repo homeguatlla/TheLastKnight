@@ -17,6 +17,7 @@ public:
 	void Update(float elapsedTime) override;
 	glm::vec3 GetPosition() const override;
 	void MoveTo(float elapsedTime, const glm::vec3& point) override;
+	IAgentAIController* GetController() const { return mController; }
 
 private:
 	IAgentAIController* mController;

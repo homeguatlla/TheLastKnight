@@ -1,6 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include <TheLastKnight/Character/HUD/CharacterHUD.h>
 #include <TheLastKnight/TheLastKnightGameMode.h>
 #include <TheLastKnight/Character/HUD/IHealthHUD.h>
@@ -20,13 +18,6 @@ void ACharacterHUD::Initialize(
 	APlayerController* playerController, 
 	TArray<TSubclassOf<UUserWidget>> widgetsClasses)
 {
-/*
-	mCharacterHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
-		hudIndex++,
-		CHARACTER_HUD_NAME,
-		playerController,
-		widgetsClasses[0]);*/
-
 	mHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
 		hudIndex++, 
 		CHARACTER_HUD_NAME,

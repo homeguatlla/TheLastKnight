@@ -51,22 +51,14 @@ void AMainHUD::BindToDelegate()
 	{
 		gameMode->GetEventDispatcher()->OnLogPredicate.AddDynamic(this, &AMainHUD::OnLogPredicate);
 		gameMode->GetEventDispatcher()->OnLogClear.AddDynamic(this, &AMainHUD::OnLogClear);
-
-		/*gameMode->GetEventDispatcher()->OnUpdateHealth.AddDynamic(this, &ACharacterHUD::OnUpdateHealthReceived);
-		gameMode->GetEventDispatcher()->OnAddAbilityIntoToolBelt.AddDynamic(this, &ACharacterHUD::OnAddAbilityIntoToolBeltReceived);
-
-		gameMode->GetEventDispatcher()->OnNotifyStartCasting.AddDynamic(this, &ACharacterHUD::OnNotifyStartCastingReceived);
-		gameMode->GetEventDispatcher()->OnNotifyCast.AddDynamic(this, &ACharacterHUD::OnNotifyCastReceived);
-		gameMode->GetEventDispatcher()->OnNotifyCooldownTime.AddDynamic(this, &ACharacterHUD::OnNotifyCooldownTimeReceived);
-		gameMode->GetEventDispatcher()->OnNotifyReadyToCast.AddDynamic(this, &ACharacterHUD::OnNotifyReadyToCastReceived);*/
 	}
 }
 
-void AMainHUD::OnLogPredicate(const FString& predicate)
+void AMainHUD::OnLogPredicate(const ANPCAIController* controller, const FString& predicate)
 {
 	if (mDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
 	{
-		IAgentDebugHUD::Execute_OnLogPredicate(mDebugHUDWidget, predicate);
+		IAgentDebugHUD::Execute_OnLogPredicate(mDebugHUDWidget, controller, predicate);
 	}
 }
 

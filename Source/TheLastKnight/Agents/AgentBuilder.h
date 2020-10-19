@@ -5,6 +5,7 @@
 
 class IAgentAIController;
 class AEventDispatcher;
+class ANPCAIController;
 
 namespace NAI {
 	namespace Goap {
@@ -24,17 +25,16 @@ public:
 	AgentBuilder& AddGoapPlanner(std::shared_ptr<NAI::Goap::IGoapPlanner> goapPlanner);
 	AgentBuilder& AddGoal(std::shared_ptr<NAI::Goap::IGoal> goal);
 	AgentBuilder& AddPredicate(std::shared_ptr<NAI::Goap::IPredicate> predicate);
-	AgentBuilder& AddController(IAgentAIController* controller);
+	AgentBuilder& AddController(ANPCAIController* controller);
 	AgentBuilder& AddEventDispatcher(AEventDispatcher* eventDispatcher);
 
 	template<class TAgent>
 	std::shared_ptr<NAI::Goap::IAgent> Build()
 	{
 		auto agent = std::make_shared<TAgent>(mGoapPlanner, mGoals, mPredicates, mController);
-		auto debugAgent = std::make_shared<NPCAgentDebugDecorator>(agent, mEventDispatcher);
+		auto debugAgent = std::make_shared<NPCAgentDebugDecorator>(agent, mController, mEventDispatcher);
 
 		return debugAgent;
-		//return agent;
 	}
 	
 private:
@@ -42,6 +42,6 @@ private:
 	std::shared_ptr<NAI::Goap::IGoapPlanner> mGoapPlanner;
 	std::vector<std::shared_ptr<NAI::Goap::IGoal>> mGoals;
 	std::vector<std::shared_ptr<NAI::Goap::IPredicate>> mPredicates;
-	IAgentAIController* mController;
+	ANPCAIController* mController;
 	AEventDispatcher* mEventDispatcher;
 };

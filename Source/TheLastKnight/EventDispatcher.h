@@ -11,7 +11,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNotifyCast, const FString&, ability
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNotifyCooldownTime, const FString&, abilityName, float, remainingTime);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNotifyReadyToCast, const FString&, abilityName);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLogPredicate, const FString&, text);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FLogPredicate, const ANPCAIController*, controller, const FString&, text);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLogClear);
 
 
