@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include <Blueprint/UserWidget.h>
-#include <TheLastKnight/Character/HUD/Abilities/IAbilitiesToolBeltHUD.h>
 #include "CharacterHUD.generated.h"
 
 /**

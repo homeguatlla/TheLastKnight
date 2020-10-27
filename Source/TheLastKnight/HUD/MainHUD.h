@@ -9,6 +9,7 @@
 
 
 class ACharacterHUD;
+class ADebugHUDController;
 
 /**
  * Basic Main HUD
@@ -23,24 +24,19 @@ public:
 
 	void BeginPlay() override;
 
-	UFUNCTION()
-	void OnLogPredicate(const ANPCAIController* controller, const FString& predicate);
-	
-	UFUNCTION()
-	void OnLogClear();
-
 private:
 	void BindToDelegate();
+	void CreateDebugHUD(TArray<TSubclassOf<UUserWidget>> widgetClasses);
 	void CreateCharacterHUD(TArray<TSubclassOf<UUserWidget>> widgetClasses);
 
 public:
 	/** Blueprint class which displays the ability */
-	UPROPERTY(EditAnywhere, Category = "Character HUD")
+	UPROPERTY(EditAnywhere, Category = "Character HUDs")
 	TArray<TSubclassOf<UUserWidget>> CharacterHUDWidgetClasses;
 
 	/** Blueprint class which displays the ability */
-	UPROPERTY(EditAnywhere, Category = "Debug HUD")
-	TSubclassOf<UUserWidget> DebugHUDWidgetClass;
+	UPROPERTY(EditAnywhere, Category = "Debug HUDs")
+	TArray<TSubclassOf<UUserWidget>> DebugHUDWidgetClasses;
 
 	UPROPERTY()
 	UUserWidget* mCharacterHUDWidget;
@@ -51,4 +47,5 @@ public:
 	int mHudIndex;
 
 	ACharacterHUD* mCharacterHUD;
+	ADebugHUDController* mDebugHUDController;
 };

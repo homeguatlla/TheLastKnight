@@ -2,11 +2,12 @@
 
 
 #include <TheLastKnight/HUD/MainHUD.h>
-#include <TheLastKnight/HUD/Debug/IAgentDebugHUD.h>
 
 #include <TheLastKnight/utils/UtilsLibrary.h>
-#include <TheLastKnight/Character/HUD/CharacterHUD.h>
 #include <TheLastKnight/TheLastKnightGameMode.h>
+
+#include <TheLastKnight/Debug/HUD/DebugHUDController.h>
+#include <TheLastKnight/Character/HUD/CharacterHUD.h>
 
 #include <Kismet/GameplayStatics.h>
 
@@ -19,15 +20,24 @@ void AMainHUD::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	mDebugHUDWidget = utils::UtilsLibrary::CreateHUDFromClass<UUserWidget>(
-		mHudIndex++,
-		GetName(),
-		GetOwningPlayerController(), 
-		DebugHUDWidgetClass);
-
+	CreateDebugHUD(DebugHUDWidgetClasses);
 	CreateCharacterHUD(CharacterHUDWidgetClasses);
 	
 	BindToDelegate();
+}
+
+void AMainHUD::CreateDebugHUD(TArray<TSubclassOf<UUserWidget>> widgetClasses)
+{
+	FActorSpawnParameters spawnInfo;
+	spawnInfo.Owner = this;
+	//spawnInfo.Instigator = this;
+	spawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	mDebugHUDController = GetWorld()->SpawnActor<ADebugHUDController>(
+		ADebugHUDController::StaticClass(),
+		FVector::ZeroVector,
+		FRotator::ZeroRotator,
+		spawnInfo);
+	mDebugHUDController->Initialize(mHudIndex, GetOwningPlayerController(), widgetClasses);
 }
 
 void AMainHUD::CreateCharacterHUD(TArray<TSubclassOf<UUserWidget>> widgetClasses)
@@ -49,23 +59,6 @@ void AMainHUD::BindToDelegate()
 	auto gameMode = Cast<ATheLastKnightGameMode>(UGameplayStatics::GetGameMode(GetOwningPawn()->GetWorld()));
 	if (gameMode)
 	{
-		gameMode->GetEventDispatcher()->OnLogPredicate.AddDynamic(this, &AMainHUD::OnLogPredicate);
-		gameMode->GetEventDispatcher()->OnLogClear.AddDynamic(this, &AMainHUD::OnLogClear);
-	}
-}
-
-void AMainHUD::OnLogPredicate(const ANPCAIController* controller, const FString& predicate)
-{
-	if (mDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
-	{
-		IAgentDebugHUD::Execute_OnLogPredicate(mDebugHUDWidget, controller, predicate);
-	}
-}
-
-void AMainHUD::OnLogClear()
-{
-	if (mDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
-	{
-		IAgentDebugHUD::Execute_OnLogClear(mDebugHUDWidget);
+		
 	}
 }

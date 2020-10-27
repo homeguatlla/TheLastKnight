@@ -14,17 +14,25 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 
-#include <TheLastKnight/Character/fsm/states/Idle.h>
-#include <TheLastKnight/Character/fsm/states/Walk.h>
-#include <TheLastKnight/Character/fsm/states/Casting.h>
-#include <TheLastKnight/Character/fsm/states/IdleAbility.h>
-#include <TheLastKnight/Character/fsm/states/Cooldown.h>
+#include <TheLastKnight/Character/fsm/states/movement/Idle.h>
+#include <TheLastKnight/Character/fsm/states/movement/Walk.h>
 
-#include <TheLastKnight/Character/fsm/transitions/EnterIdle.h>
-#include <TheLastKnight/Character/fsm/transitions/EnterWalk.h>
-#include <TheLastKnight/Character/fsm/transitions/EnterCast.h>
-#include <TheLastKnight/Character/fsm/transitions/EnterIdleAbility.h>
-#include <TheLastKnight/Character/fsm/transitions/EnterCooldown.h>
+#include <TheLastKnight/Character/fsm/states/debug/Debug.h>
+#include <TheLastKnight/Character/fsm/states/debug/Normal.h>
+
+#include <TheLastKnight/Character/fsm/states/abilities/Casting.h>
+#include <TheLastKnight/Character/fsm/states/abilities/IdleAbility.h>
+#include <TheLastKnight/Character/fsm/states/abilities/Cooldown.h>
+
+#include <TheLastKnight/Character/fsm/transitions/movement/EnterIdle.h>
+#include <TheLastKnight/Character/fsm/transitions/movement/EnterWalk.h>
+
+#include <TheLastKnight/Character/fsm/transitions/abilities/EnterCast.h>
+#include <TheLastKnight/Character/fsm/transitions/abilities/EnterIdleAbility.h>
+#include <TheLastKnight/Character/fsm/transitions/abilities/EnterCooldown.h>
+
+#include <TheLastKnight/Character/fsm/transitions/debug/EnterNormal.h>
+#include <TheLastKnight/Character/fsm/transitions/debug/EnterDebug.h>
 
 #include <TheLastKnight/Character/InputHandler.h>
 #include <TheLastKnight/Character/AbilitiesToolChest.h>
@@ -203,6 +211,15 @@ void ATheLastKnightCharacter::SetupPlayerInputComponent(class UInputComponent* P
 	PlayerInputComponent->BindAction<FPressKeyDelegate>("Ability2", IE_Pressed, this, &ATheLastKnightCharacter::PressKey, TLN::InputAction::ABILITY2);
 	PlayerInputComponent->BindAction<FReleaseKeyDelegate>("Ability2", IE_Released, this, &ATheLastKnightCharacter::ReleaseKey, TLN::InputAction::ABILITY2);
 
+	PlayerInputComponent->BindAction<FPressKeyDelegate>("EnableDebugMode", IE_Pressed, this, &ATheLastKnightCharacter::PressKey, TLN::InputAction::ENTER_LEAVE_DEBUG);
+	PlayerInputComponent->BindAction<FReleaseKeyDelegate>("EnableDebugMode", IE_Released, this, &ATheLastKnightCharacter::ReleaseKey, TLN::InputAction::ENTER_LEAVE_DEBUG);
+
+	PlayerInputComponent->BindAction<FPressKeyDelegate>("NextNPC", IE_Pressed, this, &ATheLastKnightCharacter::PressKey, TLN::InputAction::NEXT_NPC);
+	PlayerInputComponent->BindAction<FReleaseKeyDelegate>("NextNPC", IE_Released, this, &ATheLastKnightCharacter::ReleaseKey, TLN::InputAction::NEXT_NPC);
+
+	PlayerInputComponent->BindAction<FPressKeyDelegate>("PreviousNPC", IE_Pressed, this, &ATheLastKnightCharacter::PressKey, TLN::InputAction::PREVIOUS_NPC);
+	PlayerInputComponent->BindAction<FReleaseKeyDelegate>("PreviousNPC", IE_Released, this, &ATheLastKnightCharacter::ReleaseKey, TLN::InputAction::PREVIOUS_NPC);
+
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -264,11 +281,33 @@ void ATheLastKnightCharacter::CreateAbilityStatesMachine()
 	mStatesMachines.push_back(std::move(statesMachine));
 }
 
+void ATheLastKnightCharacter::CreateDebugStatesMachine()
+{
+	auto statesMachine = std::make_unique<StatesMachine>(mCharacterFSMContext);
+
+	auto normal = std::make_shared<Normal>();
+	auto debug = std::make_shared<Debug>();
+
+	statesMachine->AddState(normal);
+	statesMachine->AddState(debug);
+
+	//from Normal
+	statesMachine->AddTransition(std::make_unique<EnterDebug>(normal, debug));
+
+	//from Debug
+	statesMachine->AddTransition(std::make_unique<EnterNormal>(debug, normal));
+
+	statesMachine->SetInitialState(normal->GetID());
+
+	mStatesMachines.push_back(std::move(statesMachine));
+}
+
 void ATheLastKnightCharacter::CreateStatesMachine()
 {
-	mCharacterFSMContext = std::make_shared<CharacterContext>(this, mInputHandler);
+	mCharacterFSMContext = std::make_shared<CharacterContext>(GetWorld(), this, mInputHandler);
 	CreateMovementStatesMachine();
 	CreateAbilityStatesMachine();
+	CreateDebugStatesMachine();
 }
 
 void ATheLastKnightCharacter::FillUpCharacterAttributes()

@@ -11,6 +11,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNotifyCast, const FString&, ability
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNotifyCooldownTime, const FString&, abilityName, float, remainingTime);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNotifyReadyToCast, const FString&, abilityName);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEnableDebugMode, bool, enable);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FLogPredicate, const ANPCAIController*, controller, const FString&, text);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLogClear);
 
@@ -37,6 +39,9 @@ class AEventDispatcher : public AActor
 		FNotifyCooldownTime OnNotifyCooldownTime;
 		UPROPERTY(BlueprintAssignable, Category = "Character Ability")
 		FNotifyReadyToCast OnNotifyReadyToCast;
+
+		UPROPERTY(BlueprintAssignable, Category = "Debug Mode")
+		FEnableDebugMode OnEnableDebugMode;
 
 		UPROPERTY(BlueprintAssignable, Category="Agent Log")
 		FLogPredicate OnLogPredicate;

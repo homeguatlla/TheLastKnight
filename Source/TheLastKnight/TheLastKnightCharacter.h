@@ -139,6 +139,7 @@ private:
 	void CreateStatesMachine();
 	void CreateMovementStatesMachine();
 	void CreateAbilityStatesMachine();
+	void CreateDebugStatesMachine();
 	void FillUpCharacterAttributes();
 	void FillUpAbilitiesFactory();
 	void AddDefaultAbilitiesToTheAbilitiesToolChest();

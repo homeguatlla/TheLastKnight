@@ -9,7 +9,11 @@ namespace TLN
 		JUMP,
 		ABILITY1,
 		ABILITY2,
-		USE
+		USE,
+
+		ENTER_LEAVE_DEBUG,
+		NEXT_NPC,
+		PREVIOUS_NPC
 	};
 
 	struct Action

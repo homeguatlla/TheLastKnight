@@ -3,6 +3,7 @@
 #include <TheLastKnight/TheLastKnightGameMode.h>
 #include <TheLastKnight/Character/HUD/IHealthHUD.h>
 #include <TheLastKnight/Character/HUD/Abilities/IAbilityBaseHUD.h>
+#include <TheLastKnight/Character/HUD/Abilities/IAbilitiesToolBeltHUD.h>
 #include <Kismet/GameplayStatics.h>
 #include <TheLastKnight/utils/UtilsLibrary.h>
 
@@ -37,13 +38,15 @@ void ACharacterHUD::BindToDelegate()
 	auto gameMode = Cast<ATheLastKnightGameMode>(UGameplayStatics::GetGameMode(this->GetWorld()));
 	if (gameMode)
 	{
-		gameMode->GetEventDispatcher()->OnUpdateHealth.AddDynamic(this, &ACharacterHUD::OnUpdateHealthReceived);
-		gameMode->GetEventDispatcher()->OnAddAbilityIntoToolBelt.AddDynamic(this, &ACharacterHUD::OnAddAbilityIntoToolBeltReceived);
+		auto eventDispatcher = gameMode->GetEventDispatcher();
 
-		gameMode->GetEventDispatcher()->OnNotifyStartCasting.AddDynamic(this, &ACharacterHUD::OnNotifyStartCastingReceived);
-		gameMode->GetEventDispatcher()->OnNotifyCast.AddDynamic(this, &ACharacterHUD::OnNotifyCastReceived);
-		gameMode->GetEventDispatcher()->OnNotifyCooldownTime.AddDynamic(this, &ACharacterHUD::OnNotifyCooldownTimeReceived);
-		gameMode->GetEventDispatcher()->OnNotifyReadyToCast.AddDynamic(this, &ACharacterHUD::OnNotifyReadyToCastReceived);
+		eventDispatcher->OnUpdateHealth.AddDynamic(this, &ACharacterHUD::OnUpdateHealthReceived);
+		eventDispatcher->OnAddAbilityIntoToolBelt.AddDynamic(this, &ACharacterHUD::OnAddAbilityIntoToolBeltReceived);
+		
+		eventDispatcher->OnNotifyStartCasting.AddDynamic(this, &ACharacterHUD::OnNotifyStartCastingReceived);
+		eventDispatcher->OnNotifyCast.AddDynamic(this, &ACharacterHUD::OnNotifyCastReceived);
+		eventDispatcher->OnNotifyCooldownTime.AddDynamic(this, &ACharacterHUD::OnNotifyCooldownTimeReceived);
+		eventDispatcher->OnNotifyReadyToCast.AddDynamic(this, &ACharacterHUD::OnNotifyReadyToCastReceived);
 	}
 }
 
