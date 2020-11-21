@@ -15,6 +15,10 @@ namespace TLN
 
 	bool EnterDebug::CanPerformTransition() const
 	{
-		return mInputHandler->IsActionPressed(InputAction::ENTER_LEAVE_DEBUG);
+		auto pressed = mInputHandler->IsActionPressed(InputAction::ENTER_LEAVE_DEBUG);
+
+		mInputHandler->InsertInput(InputAction::ENTER_LEAVE_DEBUG, false);
+
+		return pressed;
 	}
 };

@@ -49,6 +49,11 @@ void ANPCAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollow
 	Super::OnMoveCompleted(RequestID, Result);
 }
 
+FString ANPCAIController::GetAgentName_Implementation() const
+{
+	return GetCharacter()->GetName();
+}
+
 void ANPCAIController::CreateNavigationPlanner()
 {
 	mNavigationPlanner = std::make_shared<NavigationPlanner>(GetWorld());

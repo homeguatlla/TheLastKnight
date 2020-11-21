@@ -23,12 +23,14 @@ public:
 	
 	UFUNCTION()
 	void OnEnableDebugMode(bool enable);
-
 	UFUNCTION()
 	void OnLogPredicate(const ANPCAIController* controller, const FString& predicate);
-
 	UFUNCTION()
-	void OnLogClear();
+	void OnLogClear(); 
+	UFUNCTION()
+	void OnNextNPC(const FString& name);
+	UFUNCTION()
+	void OnPreviousNPC(const FString& name);
 
 private:
 	void BindToDelegate();

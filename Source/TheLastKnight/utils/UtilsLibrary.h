@@ -1,5 +1,9 @@
 #pragma once
 #include "CoreMinimal.h"
+#include "Kismet/GameplayStatics.h"
+#include <TheLastKnight/Agents/AI/NPCAIController.h>
+#include <vector>
+#include <string>
 
 namespace utils
 {
@@ -36,6 +40,25 @@ class UtilsLibrary
 			//widget->InitializeWidget();
 
 			return Cast<InterfaceTypeTarget>(widget);
+		}
+
+		template<class T>
+		static TArray<AActor*> GetAllActorsOfClass(UWorld* world, TSubclassOf<T> classToFind)
+		{
+			TArray<AActor*> foundActors;
+			UGameplayStatics::GetAllActorsOfClass(world, classToFind, foundActors);
+			
+			return foundActors;
+		}
+
+		static FString ConvertToFString(const std::string& text)
+		{
+			return UTF8_TO_TCHAR(text.c_str());
+		}
+
+		static std::string ConvertToString(const FString& text)
+		{
+			return std::string(TCHAR_TO_UTF8(*text));
 		}
 };
 }

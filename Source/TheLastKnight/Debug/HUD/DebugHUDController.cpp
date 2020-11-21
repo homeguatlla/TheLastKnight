@@ -42,6 +42,8 @@ void ADebugHUDController::BindToDelegate()
 		eventDispatcher->OnEnableDebugMode.AddDynamic(this, &ADebugHUDController::OnEnableDebugMode);
 		eventDispatcher->OnLogPredicate.AddDynamic(this, &ADebugHUDController::OnLogPredicate);
 		eventDispatcher->OnLogClear.AddDynamic(this, &ADebugHUDController::OnLogClear);
+		eventDispatcher->OnNextNPC.AddDynamic(this, &ADebugHUDController::OnNextNPC);
+		eventDispatcher->OnPreviousNPC.AddDynamic(this, &ADebugHUDController::OnPreviousNPC);
 	}
 }
 
@@ -50,6 +52,10 @@ void ADebugHUDController::OnEnableDebugMode(bool enable)
 	if (mDebugHUDWidget->GetClass()->ImplementsInterface(UDebugHUD::StaticClass()))
 	{
 		IDebugHUD::Execute_OnEnableDebugMode(mDebugHUDWidget, enable);
+	}
+	if (mAgentDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
+	{
+		IAgentDebugHUD::Execute_OnEnableDebugMode(mAgentDebugHUDWidget, enable);
 	}
 }
 
@@ -66,5 +72,21 @@ void ADebugHUDController::OnLogClear()
 	if (mAgentDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
 	{
 		IAgentDebugHUD::Execute_OnLogClear(mAgentDebugHUDWidget);
+	}
+}
+
+void ADebugHUDController::OnNextNPC(const FString& name)
+{
+	if (mAgentDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
+	{
+		IAgentDebugHUD::Execute_OnNextNPC(mAgentDebugHUDWidget, name);
+	}
+}
+
+void ADebugHUDController::OnPreviousNPC(const FString& name)
+{
+	if (mAgentDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
+	{
+		IAgentDebugHUD::Execute_OnPreviousNPC(mAgentDebugHUDWidget, name);
 	}
 }

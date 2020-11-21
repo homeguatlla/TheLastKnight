@@ -19,6 +19,8 @@
 
 #include <TheLastKnight/Character/fsm/states/debug/Debug.h>
 #include <TheLastKnight/Character/fsm/states/debug/Normal.h>
+#include <TheLastKnight/Character/fsm/states/debug/NextNPC.h>
+#include <TheLastKnight/Character/fsm/states/debug/PreviousNPC.h>
 
 #include <TheLastKnight/Character/fsm/states/abilities/Casting.h>
 #include <TheLastKnight/Character/fsm/states/abilities/IdleAbility.h>
@@ -33,6 +35,9 @@
 
 #include <TheLastKnight/Character/fsm/transitions/debug/EnterNormal.h>
 #include <TheLastKnight/Character/fsm/transitions/debug/EnterDebug.h>
+#include <TheLastKnight/Character/fsm/transitions/debug/EnterNextNPC.h>
+#include <TheLastKnight/Character/fsm/transitions/debug/EnterPreviousNPC.h>
+#include <TheLastKnight/Character/fsm/transitions/debug/LeaveState.h>
 
 #include <TheLastKnight/Character/InputHandler.h>
 #include <TheLastKnight/Character/AbilitiesToolChest.h>
@@ -97,6 +102,10 @@ void ATheLastKnightCharacter::BeginPlay()
 
 	mInputHandler = std::make_shared<InputHandler>();
 	mAttributes = std::make_shared<TLN::CharacterAttributes>();
+	//TODO DebugData must be initialized with the first npc character
+	//but, no sé si en este punto ya se han creado los npc. Habría que 
+	//verlo y pensar donde va esto que necesita el character para la maquina de estados.
+	mDebugData = std::make_unique<DebugData>();
 
 	FillUpCharacterAttributes();
 	FillUpAbilitiesFactory();
@@ -287,15 +296,27 @@ void ATheLastKnightCharacter::CreateDebugStatesMachine()
 
 	auto normal = std::make_shared<Normal>();
 	auto debug = std::make_shared<Debug>();
+	auto nextNPC = std::make_shared<NextNPC>();
+	auto previousNPC = std::make_shared<PreviousNPC>();
 
 	statesMachine->AddState(normal);
 	statesMachine->AddState(debug);
+	statesMachine->AddState(nextNPC);
+	statesMachine->AddState(previousNPC);
 
 	//from Normal
 	statesMachine->AddTransition(std::make_unique<EnterDebug>(normal, debug));
 
 	//from Debug
 	statesMachine->AddTransition(std::make_unique<EnterNormal>(debug, normal));
+	statesMachine->AddTransition(std::make_unique<EnterNextNPC>(debug, nextNPC));
+	statesMachine->AddTransition(std::make_unique<EnterPreviousNPC>(debug, previousNPC));
+
+	//from NextNPC
+	statesMachine->AddTransition(std::make_unique<LeaveState>(nextNPC, debug));
+
+	//from PreviousNPC
+	statesMachine->AddTransition(std::make_unique<LeaveState>(previousNPC, debug));
 
 	statesMachine->SetInitialState(normal->GetID());
 
@@ -304,7 +325,11 @@ void ATheLastKnightCharacter::CreateDebugStatesMachine()
 
 void ATheLastKnightCharacter::CreateStatesMachine()
 {
-	mCharacterFSMContext = std::make_shared<CharacterContext>(GetWorld(), this, mInputHandler);
+	mCharacterFSMContext = std::make_shared<CharacterContext>(
+		GetWorld(), 
+		this, 
+		mInputHandler, 
+		mDebugData);
 	CreateMovementStatesMachine();
 	CreateAbilityStatesMachine();
 	CreateDebugStatesMachine();

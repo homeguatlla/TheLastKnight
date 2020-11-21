@@ -16,7 +16,13 @@ class IAgentDebugHUD
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
+	void OnEnableDebugMode(bool enable);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
 	void OnLogPredicate(const ANPCAIController* controller, const FString& text);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
 	void OnLogClear();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
+	void OnNextNPC(const FString& name);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
+	void OnPreviousNPC(const FString& name);
 };

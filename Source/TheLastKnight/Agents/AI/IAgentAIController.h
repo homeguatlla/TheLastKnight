@@ -11,8 +11,11 @@ class THELASTKNIGHT_API UAgentAIController : public UInterface
 class IAgentAIController
 {
 	GENERATED_BODY()
+
 public:
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Agent Controller")
+	FString GetAgentName() const;
+
 	virtual FVector GetPosition() const = 0;
 	virtual void MoveTo(float elapsedTime, const FVector& point) = 0;
 };

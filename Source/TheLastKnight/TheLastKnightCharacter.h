@@ -16,6 +16,8 @@
 #include <TheLastKnight/Character/AbilitiesToolChest.h>
 #include <TheLastKnight/Character/AbilitiesToolBelt.h>
 #include <TheLastKnight/Abilities/AbilitiesFactory.h>
+#include <TheLastKnight/Debug/DebugData.h>
+
 #include <vector>
 #include "TheLastKnightCharacter.generated.h"
 
@@ -57,6 +59,8 @@ class ATheLastKnightCharacter : public ACharacter, public ICharacter
 	std::shared_ptr<TLN::InputHandler> mInputHandler;
 
 	std::shared_ptr<TLN::AbilitiesFactory> mAbilitiesFactory;
+
+	std::shared_ptr<DebugData> mDebugData;
 
 	bool mHasNotifiedData;
 
