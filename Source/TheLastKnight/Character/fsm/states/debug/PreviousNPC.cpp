@@ -22,7 +22,7 @@ namespace TLN
 		{
 			if (it == names.begin())
 			{
-				it = names.end();
+				it = names.end() - 1;
 			}
 			else
 			{
