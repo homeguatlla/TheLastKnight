@@ -27,7 +27,6 @@ void NPCAgentDebugDecorator::Update(float elapsedTime)
 void NPCAgentDebugDecorator::SendPredicatesData()
 {
 	mEventDispatcher->OnLogClear.Broadcast();
-
 	const auto predicates = mAgent->GetPredicates();
 
 	for (auto&& predicate : predicates)
