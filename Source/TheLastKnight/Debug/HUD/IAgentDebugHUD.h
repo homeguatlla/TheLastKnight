@@ -22,7 +22,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
 	void OnLogClear();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
-	void OnNextNPC(const FString& name);
+	void OnNextNPC(const ANPCAIController* controller);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
-	void OnPreviousNPC(const FString& name);
+	void OnPreviousNPC(const ANPCAIController* controller);
 };

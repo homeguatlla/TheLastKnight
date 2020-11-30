@@ -1,15 +1,18 @@
 #include "NPCAIController.h"
-#include <TheLastKnight/Agents/AI/NPCAgent.h>
 #include <TheLastKnight/NAI/source/goap/IGoapPlanner.h>
 #include <TheLastKnight/NAI/source/goap/IGoal.h>
 #include <TheLastKnight/NAI/source/goap/IPredicate.h>
 #include <TheLastKnight/NAI/source/goap/goals/GoToGoal.h>
 #include <TheLastKnight/NAI/source/goap/predicates/GoToPredicate.h>
-#include <TheLastKnight/Agents/AgentBuilder.h>
 #include <TheLastKnight/NAI/source/goap/planners/TreeGoapPlanner.h>
 #include <TheLastKnight/TheLastKnightGameMode.h>
+#include <TheLastKnight/Agents/AgentBuilder.h>
+#include <TheLastKnight/Agents/AI/NPCAgent.h>
+#include <TheLastKnight/utils/UtilsLibrary.h>
+
 #include "GameFramework/Character.h"
 #include "Runtime/AIModule/Classes/Blueprint/AIBlueprintHelperLibrary.h"
+
 
 void ANPCAIController::BeginPlay()
 {
@@ -52,6 +55,11 @@ void ANPCAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollow
 FString ANPCAIController::GetAgentName_Implementation() const
 {
 	return GetCharacter()->GetName();
+}
+
+FString ANPCAIController::GetAgentCurrentState_Implementation() const
+{
+	return utils::UtilsLibrary::ConvertToFString(NAI::Goap::AgentStateMap[mAgent->GetCurrentState()]);
 }
 
 void ANPCAIController::CreateNavigationPlanner()

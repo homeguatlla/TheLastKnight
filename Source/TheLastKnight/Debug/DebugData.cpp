@@ -1,6 +1,6 @@
 #include <TheLastKnight/Debug/DebugData.h>
 
-void DebugData::SetCurrentNPCName(const std::string& name)
+void DebugData::SetCurrentNPCController(const ANPCAIController* controller)
 {
-	mCurrentNPCName = name;
+	mCurrentNPCController = controller;
 }

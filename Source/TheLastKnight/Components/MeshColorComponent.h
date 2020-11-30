@@ -22,9 +22,9 @@ class THELASTKNIGHT_API UMeshColorComponent : public UActorComponent
 		UFUNCTION()
 		void OnEnableDebugMode(bool enable);
 		UFUNCTION()
-		void OnNextNPC(const FString& name);
+		void OnNextNPC(const ANPCAIController* controller);
 		UFUNCTION()
-		void OnPreviousNPC(const FString& name);
+		void OnPreviousNPC(const ANPCAIController* controller);
 
 		FString GetAgentName() const;
 		UMaterialInstanceDynamic* CreateAndAssignMaterialInstanceDynamicToMesh();

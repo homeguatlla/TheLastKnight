@@ -41,20 +41,20 @@ namespace TLN
 		mAbility = ability;
 	}
 
-	std::vector<std::string> CharacterContext::GetAllNPCAgentNames() const
+	std::vector<ANPCAIController*> CharacterContext::GetAllNPCAgentControllers() const
 	{
 		auto npcActors = utils::UtilsLibrary::GetAllActorsOfClass<ANPCAIController>(
 			mWorld,
 			ANPCAIController::StaticClass());
 
-		std::vector<std::string> names;
+		std::vector<ANPCAIController*> controllers;
 
 		for (auto&& actor : npcActors)
 		{
 			auto controller = Cast<ANPCAIController>(actor);
-			names.push_back(std::string(TCHAR_TO_UTF8(*controller->GetAgentName())));
+			controllers.push_back(controller);
 		}
-		return names;
+		return controllers;
 	}
 
 	AEventDispatcher* CharacterContext::GetEventDispatcher()
@@ -64,10 +64,10 @@ namespace TLN
 
 	void CharacterContext::InitializeDebugData()
 	{
-		auto npcNames = GetAllNPCAgentNames();
-		if(!npcNames.empty())
+		auto npcControllers = GetAllNPCAgentControllers();
+		if(!npcControllers.empty())
 		{
-			mDebugData->SetCurrentNPCName(npcNames[0]);
+			mDebugData->SetCurrentNPCController(npcControllers[0]);
 		}
 	}
 }

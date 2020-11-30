@@ -12,8 +12,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNotifyCooldownTime, const FString&
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNotifyReadyToCast, const FString&, abilityName);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEnableDebugMode, bool, enable);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNextNPC, const FString&, npcName);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPreviousNPC, const FString&, npcName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNextNPC, const ANPCAIController*, controller);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPreviousNPC, const ANPCAIController*, controller);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FLogPredicate, const ANPCAIController*, controller, const FString&, text);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLogClear);

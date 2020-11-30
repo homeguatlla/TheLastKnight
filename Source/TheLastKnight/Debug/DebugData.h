@@ -1,16 +1,15 @@
 #pragma once
 
-#include<string>
-
+class ANPCAIController;
 
 class DebugData
 {
 	public:
 		DebugData() = default;
 		virtual ~DebugData() = default;
-		std::string GetCurrentNPCName() const { return mCurrentNPCName; }
-		void SetCurrentNPCName(const std::string& name);
+		const ANPCAIController* GetCurrentNPCController() const { return mCurrentNPCController; }
+		void SetCurrentNPCController(const ANPCAIController* controller);
 
 	private:
-		std::string mCurrentNPCName;
+		const ANPCAIController* mCurrentNPCController;
 };

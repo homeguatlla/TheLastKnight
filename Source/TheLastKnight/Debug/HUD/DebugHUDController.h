@@ -28,9 +28,9 @@ public:
 	UFUNCTION()
 	void OnLogClear(); 
 	UFUNCTION()
-	void OnNextNPC(const FString& name);
+	void OnNextNPC(const ANPCAIController* controller);
 	UFUNCTION()
-	void OnPreviousNPC(const FString& name);
+	void OnPreviousNPC(const ANPCAIController* controller);
 
 private:
 	void BindToDelegate();

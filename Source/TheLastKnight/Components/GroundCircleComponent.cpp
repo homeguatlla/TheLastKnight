@@ -37,14 +37,14 @@ void UGroundCircleComponent::OnEnableDebugMode(bool enable)
 	}
 }
 
-void UGroundCircleComponent::OnNextNPC(const FString& name)
+void UGroundCircleComponent::OnNextNPC(const ANPCAIController* controller)
 {
-	this->SetVisibility(mAgentName == name);
+	this->SetVisibility(mAgentName == controller->GetAgentName());
 }
 
-void UGroundCircleComponent::OnPreviousNPC(const FString& name)
+void UGroundCircleComponent::OnPreviousNPC(const ANPCAIController* controller)
 {
-	this->SetVisibility(mAgentName == name);
+	this->SetVisibility(mAgentName == controller->GetAgentName());
 }
 
 FString UGroundCircleComponent::GetAgentName() const

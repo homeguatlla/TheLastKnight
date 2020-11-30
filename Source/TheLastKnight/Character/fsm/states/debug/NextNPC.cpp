@@ -14,19 +14,19 @@ namespace TLN
 
 	void NextNPC::OnEnter(float deltaTime)
 	{
-		auto names = GetContext()->GetAllNPCAgentNames();
+		auto controllers = GetContext()->GetAllNPCAgentControllers();
 		auto debugData = GetContext()->GetDebugData();
 
-		auto it = std::find(names.begin(), names.end(), debugData->GetCurrentNPCName());
-		if (it != names.end())
+		auto it = std::find(controllers.begin(), controllers.end(), debugData->GetCurrentNPCController());
+		if (it != controllers.end())
 		{
 			it++;
-			if (it == names.end())
+			if (it == controllers.end())
 			{
-				it = names.begin();
+				it = controllers.begin();
 			}
-			debugData->SetCurrentNPCName(*it);
-			mEventDispatcher->OnNextNPC.Broadcast(utils::UtilsLibrary::ConvertToFString(*it));
+			debugData->SetCurrentNPCController(*it);
+			mEventDispatcher->OnNextNPC.Broadcast(*it);
 		}
 	}
 };

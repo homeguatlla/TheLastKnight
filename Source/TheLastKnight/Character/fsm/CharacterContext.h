@@ -7,6 +7,7 @@
 class AEventDispatcher;
 class UWorld;
 class DebugData;
+class ANPCAIController;
 
 namespace TLN
 {
@@ -33,7 +34,7 @@ namespace TLN
 
 		std::shared_ptr<DebugData> GetDebugData() const { return std::move(mDebugData); }
 
-		std::vector<std::string> GetAllNPCAgentNames() const;
+		std::vector<ANPCAIController*> GetAllNPCAgentControllers() const;
 
 	private:
 		void InitializeDebugData();

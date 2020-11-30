@@ -28,6 +28,10 @@ class THELASTKNIGHT_API ANPCAIController : public AAIController, public IAgentAI
 		FString GetAgentName() const;
 		virtual FString GetAgentName_Implementation() const;
 
+		UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Agent Controller")
+		FString GetAgentCurrentState() const;
+		virtual FString GetAgentCurrentState_Implementation() const;
+
 private:
 		void CreateAgent();
 		void CreateNavigationPlanner();

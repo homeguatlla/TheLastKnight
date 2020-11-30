@@ -51,14 +51,14 @@ void UMeshColorComponent::OnEnableDebugMode(bool enable)
 	}
 }
 
-void UMeshColorComponent::OnNextNPC(const FString& name)
+void UMeshColorComponent::OnNextNPC(const ANPCAIController* controller)
 {
-	SetColor( mAgentName == name ? mColor : DEFAULT_COLOR);
+	SetColor( mAgentName == controller->GetAgentName() ? mColor : DEFAULT_COLOR);
 }
 
-void UMeshColorComponent::OnPreviousNPC(const FString& name)
+void UMeshColorComponent::OnPreviousNPC(const ANPCAIController* controller)
 {
-	SetColor(mAgentName == name ? mColor : DEFAULT_COLOR);
+	SetColor(mAgentName == controller->GetAgentName() ? mColor : DEFAULT_COLOR);
 }
 
 FString UMeshColorComponent::GetAgentName() const

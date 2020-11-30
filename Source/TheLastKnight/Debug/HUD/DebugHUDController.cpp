@@ -75,18 +75,18 @@ void ADebugHUDController::OnLogClear()
 	}
 }
 
-void ADebugHUDController::OnNextNPC(const FString& name)
+void ADebugHUDController::OnNextNPC(const ANPCAIController* controller)
 {
 	if (mAgentDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
 	{
-		IAgentDebugHUD::Execute_OnNextNPC(mAgentDebugHUDWidget, name);
+		IAgentDebugHUD::Execute_OnNextNPC(mAgentDebugHUDWidget, controller);
 	}
 }
 
-void ADebugHUDController::OnPreviousNPC(const FString& name)
+void ADebugHUDController::OnPreviousNPC(const ANPCAIController* controller)
 {
 	if (mAgentDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
 	{
-		IAgentDebugHUD::Execute_OnPreviousNPC(mAgentDebugHUDWidget, name);
+		IAgentDebugHUD::Execute_OnPreviousNPC(mAgentDebugHUDWidget, controller);
 	}
 }

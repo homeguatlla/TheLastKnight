@@ -20,9 +20,9 @@ class THELASTKNIGHT_API UGroundCircleComponent : public UDecalComponent
 		UFUNCTION()
 		void OnEnableDebugMode(bool enable);
 		UFUNCTION()
-		void OnNextNPC(const FString& name);
+		void OnNextNPC(const ANPCAIController* controller);
 		UFUNCTION()
-		void OnPreviousNPC(const FString& name);
+		void OnPreviousNPC(const ANPCAIController* controller);
 
 		FString GetAgentName() const;
 
