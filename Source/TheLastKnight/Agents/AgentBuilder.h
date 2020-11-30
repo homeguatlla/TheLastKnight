@@ -32,6 +32,7 @@ public:
 	std::shared_ptr<NAI::Goap::IAgent> Build()
 	{
 		auto agent = std::make_shared<TAgent>(mGoapPlanner, mGoals, mPredicates, mController);
+		//TODO if is debug
 		auto debugAgent = std::make_shared<NPCAgentDebugDecorator>(agent, mController, mEventDispatcher);
 
 		return debugAgent;
