@@ -47,11 +47,6 @@ void ANPCAIController::MoveTo(float elapsedTime, const FVector& point)
 	}
 }
 
-void ANPCAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)
-{
-	Super::OnMoveCompleted(RequestID, Result);
-}
-
 FString ANPCAIController::GetAgentName_Implementation() const
 {
 	return GetCharacter()->GetName();

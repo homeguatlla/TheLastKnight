@@ -22,8 +22,7 @@ class THELASTKNIGHT_API ANPCAIController : public AAIController, public IAgentAI
 
 		FVector GetPosition() const override;
 		void MoveTo(float elapsedTime, const FVector& point) override;
-		void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
-
+		
 		UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Agent Controller")
 		FString GetAgentName() const;
 		virtual FString GetAgentName_Implementation() const;
