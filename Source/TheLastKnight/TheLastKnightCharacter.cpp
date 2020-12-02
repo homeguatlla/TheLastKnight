@@ -40,13 +40,11 @@
 #include <TheLastKnight/Character/fsm/transitions/debug/LeaveState.h>
 
 #include <TheLastKnight/Character/InputHandler.h>
-#include <TheLastKnight/Character/AbilitiesToolChest.h>
 
 #include <TheLastKnight/Abilities/IAbility.h>
 #include <TheLastKnight/Abilities/Ability.h>
 #include <TheLastKnight/Abilities/HealthAbility.h>
 
-#include <TheLastKnight/Abilities/DataAssets/DA_CharacterAbilities.h>
 #include <TheLastKnight/Abilities/DataAssets/DA_CharacterAbility.h>
 
 #include <TheLastKnight/TheLastKnightGameMode.h>
@@ -113,7 +111,7 @@ void ATheLastKnightCharacter::BeginPlay()
 	AddDefaultAbilitiesToTheAbilitiesToolChest();
 }
 
-void ATheLastKnightCharacter::NotifyStartAttributeValues()
+void ATheLastKnightCharacter::NotifyStartAttributeValues() const
 {
 	auto gameMode = GetWorld()->GetAuthGameMode<ATheLastKnightGameMode>();
 	if (gameMode)
@@ -143,13 +141,13 @@ void ATheLastKnightCharacter::Tick(float DeltaSeconds)
 
 bool ATheLastKnightCharacter::IsWalking() const
 {
-	auto characterMovement = GetCharacterMovement();
+	const auto characterMovement = GetCharacterMovement();
 	return characterMovement->IsWalking() && !characterMovement->Velocity.IsZero();
 }
 
 bool ATheLastKnightCharacter::IsIdle() const
 {
-	auto characterMovement = GetCharacterMovement();
+	const auto characterMovement = GetCharacterMovement();
 	return characterMovement->IsWalking() && characterMovement->Velocity.IsZero();
 }
 
@@ -339,11 +337,11 @@ void ATheLastKnightCharacter::FillUpCharacterAttributes()
 {
 	if (CharacterAttributes)
 	{
-		uint8 maxHealth = CharacterAttributes->GetMaxHealth();
+		const uint8 maxHealth = CharacterAttributes->GetMaxHealth();
 		assert(maxHealth > 0);
 		mAttributes->SetMaxHealth(maxHealth);
 
-		uint8 maxMana = CharacterAttributes->GetMaxMana();
+		const uint8 maxMana = CharacterAttributes->GetMaxMana();
 		assert(maxMana > 0);
 		mAttributes->SetMaxMana(maxMana);
 	}

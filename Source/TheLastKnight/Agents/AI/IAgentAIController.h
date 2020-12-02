@@ -1,5 +1,6 @@
 
 #pragma once
+#include "UObject/Interface.h"
 #include "IAgentAIController.generated.h"
 
 UINTERFACE()
@@ -17,7 +18,6 @@ public:
 	FString GetAgentName() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Agent Controller")
 	FString GetAgentCurrentState() const;
-
 
 	virtual FVector GetPosition() const = 0;
 	virtual void MoveTo(float elapsedTime, const FVector& point) = 0;

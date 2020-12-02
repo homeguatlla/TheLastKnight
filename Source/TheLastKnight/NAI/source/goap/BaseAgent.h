@@ -1,7 +1,6 @@
 #pragma once
-#include "IAgent.h"
-#include <vector>
-#include <memory>
+#include "agent/IAgent.h"
+#include "agent/AgentContext.h"
 
 namespace core
 {
@@ -25,7 +24,7 @@ namespace NAI
 			virtual ~BaseAgent() = default;
 
 		private:
-			core::utils::FSM::StatesMachine<AgentState,  mStatesMachine;
+			core::utils::FSM::StatesMachine<AgentState, AgentContext>  mStatesMachine;
 		};
 	}
 }

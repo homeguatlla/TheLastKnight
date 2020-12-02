@@ -147,7 +147,7 @@ private:
 	void FillUpCharacterAttributes();
 	void FillUpAbilitiesFactory();
 	void AddDefaultAbilitiesToTheAbilitiesToolChest();
-	void NotifyStartAttributeValues();
+	void NotifyStartAttributeValues() const;
 
 	//inherit from TLN::ICharacter
 	void PerformMovement() override;

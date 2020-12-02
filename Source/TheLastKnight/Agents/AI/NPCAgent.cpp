@@ -20,7 +20,7 @@ glm::vec3 NPCAgent::GetPosition() const
 {
 	if(mController != nullptr)
 	{
-		auto position = mController->GetPosition();
+		const auto position = mController->GetPosition();
 
 		return glm::vec3(position.X, position.Y, position.Z);
 	}
