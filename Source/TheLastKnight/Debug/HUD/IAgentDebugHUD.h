@@ -18,9 +18,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
 	void OnEnableDebugMode(bool enable);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
-	void OnLogPredicate(const ANPCAIController* controller, const FString& text);
+	void OnLogPredicate(const ANPCAIController* controller, int type, const FString& text);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
-	void OnLogClear();
+	void OnLogClear(const ANPCAIController* controller);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")
 	void OnNextNPC(const ANPCAIController* controller);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Agent Log")

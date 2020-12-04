@@ -3,7 +3,7 @@
 #include <TheLastKnight/Debug/DebugData.h>
 #include <TheLastKnight/EventDispatcher.h>
 
-namespace TLN
+namespace TLN 
 {
 	void Debug::OnInit()
 	{

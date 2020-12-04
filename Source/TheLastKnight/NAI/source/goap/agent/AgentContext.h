@@ -5,7 +5,7 @@ namespace NAI
 {
 	namespace Goap
 	{
-		class AgentContext
+		class AgentContext final
 		{
 		public:
 			AgentContext(	std::shared_ptr<IGoapPlanner> planner, 

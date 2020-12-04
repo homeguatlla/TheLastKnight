@@ -4,12 +4,14 @@
 
 #include "CoreMinimal.h"
 #include <Blueprint/UserWidget.h>
-#include <TheLastKnight/Debug/HUD/IDebugHUD.h>
+//#include <TheLastKnight/Debug/HUD/IDebugHUD.h>
 #include "DebugHUDController.generated.h"
 
 /**
  * Basic debug HUD
  */
+
+class ANPCAIController;
 
 UCLASS()
 class THELASTKNIGHT_API ADebugHUDController : public AActor
@@ -24,9 +26,9 @@ public:
 	UFUNCTION()
 	void OnEnableDebugMode(bool enable);
 	UFUNCTION()
-	void OnLogPredicate(const ANPCAIController* controller, const FString& predicate);
+	void OnLogPredicate(const ANPCAIController* controller, int type, const FString& predicate);
 	UFUNCTION()
-	void OnLogClear(); 
+	void OnLogClear(const ANPCAIController* controller);
 	UFUNCTION()
 	void OnNextNPC(const ANPCAIController* controller);
 	UFUNCTION()

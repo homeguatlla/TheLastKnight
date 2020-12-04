@@ -59,19 +59,19 @@ void ADebugHUDController::OnEnableDebugMode(bool enable)
 	}
 }
 
-void ADebugHUDController::OnLogPredicate(const ANPCAIController* controller, const FString& predicate)
+void ADebugHUDController::OnLogPredicate(const ANPCAIController* controller, int type, const FString& predicate)
 {
 	if (mAgentDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
 	{
-		IAgentDebugHUD::Execute_OnLogPredicate(mAgentDebugHUDWidget, controller, predicate);
+		IAgentDebugHUD::Execute_OnLogPredicate(mAgentDebugHUDWidget, controller, type, predicate);
 	}
 }
 
-void ADebugHUDController::OnLogClear()
+void ADebugHUDController::OnLogClear(const ANPCAIController* controller)
 {
 	if (mAgentDebugHUDWidget->GetClass()->ImplementsInterface(UAgentDebugHUD::StaticClass()))
 	{
-		IAgentDebugHUD::Execute_OnLogClear(mAgentDebugHUDWidget);
+		IAgentDebugHUD::Execute_OnLogClear(mAgentDebugHUDWidget, controller);
 	}
 }
 

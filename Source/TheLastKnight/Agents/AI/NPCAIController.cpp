@@ -65,7 +65,7 @@ void ANPCAIController::CreateAgent()
 	AgentBuilder builder;
 
 	const auto goToGoal = std::make_shared<NAI::Goap::GoToGoal>(mNavigationPlanner);
-	const auto predicate1 = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "SheriffOffice");
+	const auto predicate1 = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "GeneralStore");
 	const auto predicate2 = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "Saloon");
 	auto gameMode = GetWorld()->GetAuthGameMode<ATheLastKnightGameMode>();
 	
