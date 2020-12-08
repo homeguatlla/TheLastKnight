@@ -1,6 +1,5 @@
 #pragma once
-#include <TheLastKnight/NAI/source/goap/agent/IAgent.h>
-
+#include <NAI/include/goap/agent/IAgent.h>
 
 class NPCAgentDecorator : public NAI::Goap::IAgent
 {
@@ -17,8 +16,8 @@ public:
 	bool HasPredicate(int predicateID) const override;
 	std::string WhereIam() const override;
 	void OnNewPredicate(std::shared_ptr<NAI::Goap::IPredicate> predicate) override;
-	std::vector<std::shared_ptr<NAI::Goap::IGoal>> GetGoals() const override;
-	std::vector<std::shared_ptr<NAI::Goap::IPredicate>> GetPredicates() const override;
+	const std::vector<std::shared_ptr<NAI::Goap::IGoal>>& GetGoals() const override;
+	const std::vector<std::shared_ptr<NAI::Goap::IPredicate>>& GetPredicates() const override;
 	bool IsEnabled() const { return mIsEnabled; }
 	void SetEnabled(bool enabled) { mIsEnabled = enabled; }
 

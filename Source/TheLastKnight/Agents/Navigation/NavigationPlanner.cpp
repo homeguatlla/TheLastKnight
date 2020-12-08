@@ -1,5 +1,5 @@
 #include "NavigationPlanner.h"
-#include <TheLastKnight/NAI/source/navigation/INavigationPlanner.h>
+#include <NAI/include/navigation/INavigationPlanner.h>
 #include <TheLastKnight/Agents/Navigation/NavigationPath.h>
 
 #include "Runtime/Engine/Classes/Engine/TargetPoint.h"

@@ -1,7 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
-#include <TheLastKnight/NAI/glm/glm.hpp>
-#include <TheLastKnight/NAI/source/navigation/INavigationPlanner.h>
+#include <NAI/include/glm/glm.hpp>
+#include <NAI/include/navigation/INavigationPlanner.h>
 #include <memory>
 #include <map>
 #include <string>

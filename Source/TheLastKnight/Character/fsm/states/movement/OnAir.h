@@ -1,8 +1,7 @@
 #pragma once
-#include <TheLastKnight/utils/fsm/BaseState.h>
+#include <NAI/include/utils/fsm/BaseState.h>
 #include <TheLastKnight/Character/fsm/CharacterContext.h>
 #include <TheLastKnight/Character/fsm/states/CharacterStates.h>
-#include <TheLastKnight/Character/ICharacter.h>
 
 namespace TLN
 {

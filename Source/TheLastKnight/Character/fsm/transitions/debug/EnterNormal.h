@@ -1,5 +1,5 @@
 #pragma once
-#include <TheLastKnight/utils/fsm/BaseTransition.h>
+#include <NAI/include/utils/fsm/BaseTransition.h>
 #include <TheLastKnight/Character/fsm/states/CharacterStates.h>
 
 namespace TLN

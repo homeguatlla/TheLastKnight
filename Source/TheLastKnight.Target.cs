@@ -9,6 +9,6 @@ public class TheLastKnightTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.Add("TheLastKnight");
-	}
+        ExtraModuleNames.AddRange(new string[] { "TheLastKnight", "NAIlib" });
+    }
 }

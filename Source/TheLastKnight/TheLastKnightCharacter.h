@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 
-#include <TheLastKnight/utils/fsm/StatesMachine.h>
+#include <NAI/include/utils/fsm/StatesMachine.h>
 
 #include <TheLastKnight/Character/CharacterAttributes.h>
 #include <TheLastKnight/Character/DA_CharacterAttributes.h>
@@ -13,7 +13,6 @@
 #include <TheLastKnight/Character/fsm/states/CharacterStates.h>
 #include <TheLastKnight/Character/ICharacter.h>
 #include <TheLastKnight/Character/InputHandler.h>
-#include <TheLastKnight/Character/AbilitiesToolChest.h>
 #include <TheLastKnight/Character/AbilitiesToolBelt.h>
 #include <TheLastKnight/Abilities/AbilitiesFactory.h>
 #include <TheLastKnight/Debug/DebugData.h>

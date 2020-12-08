@@ -1,12 +1,8 @@
 #include "NPCAgentDebugDecorator.h"
 #include <TheLastKnight/EventDispatcher.h>
-#include <TheLastKnight/TheLastKnightGameMode.h>
-#include <TheLastKnight/NAI/source/goap/IPredicate.h>
+#include <NAI/include/goap/IPredicate.h>
 #include <TheLastKnight/utils/UtilsLibrary.h>
-#include <Kismet/GameplayStatics.h>
 #include <algorithm>
-#include "Engine/Engine.h"
-
 
 const float NEW_PREDICATE_TIME = 5.0f;
 const float	REMOVING_PREDICATE_TIME = 3.0f;

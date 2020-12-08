@@ -1,5 +1,6 @@
 #pragma once
-#include <TheLastKnight/NAI/source/goap/agent/BaseAgent.h>
+#include <NAI/include/goap/agent/BaseAgent.h>
+#include <NAI/include/goap/IGoapPlanner.h>
 #include "CoreMinimal.h"
 
 class IAgentAIController;

@@ -47,12 +47,12 @@ void NPCAgentDecorator::OnNewPredicate(std::shared_ptr<NAI::Goap::IPredicate> pr
 	mAgent->OnNewPredicate(predicate);
 }
 
-std::vector<std::shared_ptr<NAI::Goap::IGoal>> NPCAgentDecorator::GetGoals() const
+const std::vector<std::shared_ptr<NAI::Goap::IGoal>>& NPCAgentDecorator::GetGoals() const
 {
 	return mAgent->GetGoals();
 }
 
-std::vector<std::shared_ptr<NAI::Goap::IPredicate>> NPCAgentDecorator::GetPredicates() const
+const std::vector<std::shared_ptr<NAI::Goap::IPredicate>>& NPCAgentDecorator::GetPredicates() const
 {
 	return mAgent->GetPredicates();
 }

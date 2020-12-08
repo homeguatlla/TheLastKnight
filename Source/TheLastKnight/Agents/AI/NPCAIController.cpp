@@ -1,8 +1,8 @@
 #include "NPCAIController.h"
-#include <TheLastKnight/NAI/source/goap/IGoapPlanner.h>
-#include <TheLastKnight/NAI/source/goap/goals/GoToGoal.h>
-#include <TheLastKnight/NAI/source/goap/predicates/GoToPredicate.h>
-#include <TheLastKnight/NAI/source/goap/planners/TreeGoapPlanner.h>
+#include <NAI/include/goap/IGoapPlanner.h>
+#include <NAI/include/goap/goals/GoToGoal.h>
+#include <NAI/include/goap/predicates/GoToPredicate.h>
+#include <NAI/include/goap/planners/TreeGoapPlanner.h>
 #include <TheLastKnight/TheLastKnightGameMode.h>
 #include <TheLastKnight/Agents/AgentBuilder.h>
 #include <TheLastKnight/Agents/AI/NPCAgent.h>
@@ -10,6 +10,7 @@
 
 #include "GameFramework/Character.h"
 #include "Runtime/AIModule/Classes/Blueprint/AIBlueprintHelperLibrary.h"
+#include "Engine/World.h"
 
 
 void ANPCAIController::BeginPlay()
@@ -67,19 +68,23 @@ void ANPCAIController::CreateAgent()
 	const auto goToGoal = std::make_shared<NAI::Goap::GoToGoal>(mNavigationPlanner);
 	const auto predicate1 = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "GeneralStore");
 	const auto predicate2 = std::make_shared<NAI::Goap::GoToPredicate>("GoTo", "Saloon");
-	auto gameMode = GetWorld()->GetAuthGameMode<ATheLastKnightGameMode>();
-	
-	if (gameMode->IsValidLowLevel())
+	const auto world = GetWorld();
+	if(world->IsValidLowLevel())
 	{
-		auto eventDispatcher = gameMode->GetEventDispatcher();
-		mAgent = builder.AddGoapPlanner(std::make_shared<NAI::Goap::TreeGoapPlanner>())
-						.AddController(this)
-						.AddGoal(goToGoal)
-						.AddPredicate(predicate1)
-						.AddPredicate(predicate2)
-						.AddEventDispatcher(eventDispatcher)
-						.Build<NPCAgent>();
+		auto gameMode = world->GetAuthGameMode<ATheLastKnightGameMode>();
 
-		mAgent->StartUp();
+		if (gameMode->IsValidLowLevel())
+		{
+			const auto eventDispatcher = gameMode->GetEventDispatcher();
+			mAgent = builder.AddGoapPlanner(std::make_shared<NAI::Goap::TreeGoapPlanner>())
+				.AddController(this)
+				.AddGoal(goToGoal)
+				.AddPredicate(predicate1)
+				.AddPredicate(predicate2)
+				.AddEventDispatcher(eventDispatcher)
+				.Build<NPCAgent>();
+
+			mAgent->StartUp();
+		}
 	}
 }

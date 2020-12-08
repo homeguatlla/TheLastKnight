@@ -9,6 +9,6 @@ public class TheLastKnightEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.Add("TheLastKnight");
+        ExtraModuleNames.AddRange(new string[] { "TheLastKnight", "NAIlib"});
 	}
 }

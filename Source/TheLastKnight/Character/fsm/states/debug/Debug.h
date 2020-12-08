@@ -1,5 +1,5 @@
 #pragma once
-#include <TheLastKnight/utils/fsm/BaseState.h>
+#include <NAI/include/utils/fsm/BaseState.h>
 #include <TheLastKnight/Character/fsm/states/CharacterStates.h>
 
 class AEventDispatcher;
